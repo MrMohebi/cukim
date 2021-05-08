@@ -18,11 +18,11 @@ class CreateFoodGroupsTable extends Migration
             $table->tinyText("persian_name");
             $table->tinyText("english_name");
             $table->tinyText("logo")->nullable();
-            $table->tinyText("status")->default("active");
+            $table->string("status")->default("active");
             $table->integer("rank")->default(0);
-            $table->tinyText("type")->default("restaurant");
+            $table->string("type")->default("restaurant");
             $table->tinyText("average_color")->nullable();
-            $table->tinyText("res_english_name")->default("general");
+            $table->string("res_english_name")->default("general");
             $table->timestamps();
         });
     }

@@ -21,9 +21,9 @@ class CreateAdminsTable extends Migration
             $table->tinyText("name")->nullable();
             $table->tinyText("position");
             $table->tinyText("phone");
-            $table->tinyText("status")->default("active");
+            $table->string("status")->default("active");
             $table->text("token");
-            $table->timestamp("last_login")->default(0);
+            $table->timestamp("last_login");
             $table->tinyText("promoted_by");
             $table->timestamps();
         });

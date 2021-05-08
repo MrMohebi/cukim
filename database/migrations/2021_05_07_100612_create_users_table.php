@@ -16,9 +16,9 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->tinyText('name')->nullable();
-            $table->tinyText('phone')->unique();
+            $table->tinyText('phone');
             $table->timestamp('birthday')->nullable();
-            $table->tinyText('status')->default("active");
+            $table->string('status')->default("active");
             $table->tinyText('job')->nullable();
             $table->bigInteger('amount')->default(0);
             $table->json('off_codes')->nullable();

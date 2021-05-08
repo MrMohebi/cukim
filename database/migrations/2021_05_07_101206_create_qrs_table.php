@@ -20,7 +20,7 @@ class CreateQrsTable extends Migration
             $table->json("get_params")->nullable();
             $table->tinyText("res_base_url");
             $table->text("res_final_url");
-            $table->tinyText("status")->default("active");
+            $table->string("status")->default("active");
             $table->timestamps();
         });
     }

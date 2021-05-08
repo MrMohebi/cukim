@@ -27,8 +27,8 @@ class CreateOffCodesTable extends Migration
             $table->mediumInteger("discount_amount")->default(0);
             $table->tinyText("name")->nullable();
             $table->tinyText("body")->nullable();
-            $table->timestamp('from')->default(0);
-            $table->timestamp('to')->default(0);
+            $table->timestamp('from');
+            $table->timestamp('to');
             $table->tinyText('status')->nullable();
             $table->timestamps();
         });

@@ -23,7 +23,7 @@ class CreateInvoicesTable extends Migration
             $table->bigInteger("online_from_previous");
             $table->bigInteger("offline_from_previous");
             $table->bigInteger("to_pay");
-            $table->tinyText("status")->default("created-notPaid");
+            $table->string("status")->default("created-notPaid");
             $table->timestamp("paid_at");
             $table->bigInteger("paid_amount");
             $table->tinyText("res_card_number");
