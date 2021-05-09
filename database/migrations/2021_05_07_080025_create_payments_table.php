@@ -26,6 +26,7 @@ class CreatePaymentsTable extends Migration
             $table->tinyText("payment_group");
             $table->smallInteger("payment_num");
             $table->tinyText("ipg")->nullable();
+            $table->tinyText("details")->nullable();
             $table->tinyText("payer_phone")->nullable();
             $table->tinyText("payer_name")->nullable();
             $table->tinyText("payer_card")->nullable();

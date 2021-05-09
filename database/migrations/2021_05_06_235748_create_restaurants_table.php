@@ -22,11 +22,13 @@ class CreateRestaurantsTable extends Migration
             $table->tinyText('english_name');
             $table->smallInteger('res_code');
             $table->tinyText('token');
-            $table->tinyText('phone');
+            $table->json('phone');
             $table->tinyText('payment_key');
             $table->tinyText('db_name');
+            $table->tinyText('ipg_name');
+            $table->text('ipg_token');
+            $table->text('ipg_data');
             $table->timestamps();
-
         });
     }
 
