@@ -15,11 +15,11 @@ class CreateQrsTable extends Migration
     {
         Schema::create('qrs', function (Blueprint $table) {
             $table->id();
-            $table->tinyText("code");
-            $table->tinyText("res_english_name");
+            $table->string("code");
+            $table->string("res_english_name");
             $table->json("get_params")->nullable();
-            $table->tinyText("res_base_url");
-            $table->text("res_final_url");
+            $table->string("res_base_url");
+            $table->string("res_final_url");
             $table->string("status")->default("active");
             $table->timestamps();
         });

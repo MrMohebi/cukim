@@ -15,13 +15,13 @@ class CreateFoodGroupsTable extends Migration
     {
         Schema::create('food_groups', function (Blueprint $table) {
             $table->id();
-            $table->tinyText("persian_name");
-            $table->tinyText("english_name");
-            $table->tinyText("logo")->nullable();
+            $table->string("persian_name");
+            $table->string("english_name");
+            $table->string("logo")->nullable();
             $table->string("status")->default("active");
             $table->integer("rank")->default(0);
             $table->string("type")->default("restaurant");
-            $table->tinyText("average_color")->nullable();
+            $table->string("average_color")->nullable();
             $table->string("res_english_name")->default("general");
             $table->timestamps();
         });

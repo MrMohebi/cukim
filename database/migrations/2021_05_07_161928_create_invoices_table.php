@@ -15,9 +15,9 @@ class CreateInvoicesTable extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->tinyText("res_english_name");
-            $table->tinyText("payment_key");
-            $table->text("details");
+            $table->string("res_english_name");
+            $table->string("payment_key");
+            $table->string("details");
             $table->bigInteger("online_till_now");
             $table->bigInteger("offline_till_now");
             $table->bigInteger("online_from_previous");
@@ -26,13 +26,13 @@ class CreateInvoicesTable extends Migration
             $table->string("status")->default("created-notPaid");
             $table->timestamp("paid_at");
             $table->bigInteger("paid_amount");
-            $table->tinyText("res_card_number");
-            $table->tinyText("our_card_number");
-            $table->tinyText("bank_tracking_id");
-            $table->tinyText("creator_support_name");
-            $table->tinyText("creator_support_id");
-            $table->tinyText("payer_support_name");
-            $table->tinyText("payer_support_id");
+            $table->string("res_card_number");
+            $table->string("our_card_number");
+            $table->string("bank_tracking_id");
+            $table->string("creator_support_name");
+            $table->string("creator_support_id");
+            $table->string("payer_support_name");
+            $table->string("payer_support_id");
             $table->timestamps();
         });
     }

@@ -15,22 +15,22 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->tinyText('name')->nullable();
-            $table->tinyText('phone');
+            $table->string('name')->nullable();
+            $table->string('phone');
             $table->timestamp('birthday')->nullable();
             $table->string('status')->default("active");
-            $table->tinyText('job')->nullable();
+            $table->string('job')->nullable();
             $table->bigInteger('amount')->default(0);
             $table->json('off_codes')->nullable();
-            $table->tinyText('token')->nullable();
-            $table->tinyText('info')->nullable();
-            $table->tinyText('type')->nullable();
+            $table->string('token')->nullable();
+            $table->string('info')->nullable();
+            $table->string('type')->nullable();
             $table->json('favorite_places')->nullable();
             $table->mediumInteger('verification_code')->nullable();
             $table->tinyInteger('verification_code_tries')->nullable();
             $table->json('payments')->nullable();
             $table->json('orders')->nullable();
-            $table->text('password')->nullable();
+            $table->string('password')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

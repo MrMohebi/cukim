@@ -15,20 +15,20 @@ class CreateRestaurantsTable extends Migration
     {
         Schema::create('restaurants', function (Blueprint $table) {
             $table->id();
-            $table->tinyText('username');
-            $table->text("password");
-            $table->tinyText('position');
-            $table->tinyText('persian_name');
-            $table->tinyText('english_name');
+            $table->string('username');
+            $table->string("password");
+            $table->string('position');
+            $table->string('persian_name');
+            $table->string('english_name');
             $table->smallInteger('res_code');
-            $table->tinyText('token');
+            $table->string('token');
             $table->json('phones');
             $table->json('permissions');
-            $table->tinyText('payment_key');
-            $table->tinyText('db_name');
-            $table->tinyText('ipg_name');
-            $table->text('ipg_token');
-            $table->text('ipg_data');
+            $table->string('payment_key');
+            $table->string('db_name');
+            $table->string('ipg_name');
+            $table->string('ipg_token');
+            $table->string('ipg_data');
             $table->timestamps();
         });
     }
