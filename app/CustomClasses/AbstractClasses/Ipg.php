@@ -13,6 +13,12 @@ abstract class Ipg
         int $amount,
         string $itemType,
         array $items
-    );
-    abstract static public function verifyPayment();
+    ):array;
+    abstract static public function verifyPayment(
+        string $code,
+        string $refid,
+        string $clientrefid,
+        string $cardnumber,
+        string $cardhashpan
+    ):array;
 }
