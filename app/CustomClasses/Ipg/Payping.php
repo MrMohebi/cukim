@@ -13,6 +13,8 @@ class Payping extends Ipg{
     protected static $URLPaymentLinkBase = "https://api.payping.ir/v2/pay/gotoipg/";
     protected static $URLVerifyPayment = "https://api.payping.ir/v2/pay/verify";
     protected static $URLReturnIPG = "https://cukim.ir/api/v1/pay/NOT_SET_YET";
+    protected static $URLPaymentResult = "https://cukim.ir/api/v1/pay/NOT_SET_YET";
+
 
 
     static public function createPaymentLink(string $resEnglishName, string $userToken, string $trackingId, int $amount, string $itemType, array $items):array{
@@ -115,6 +117,196 @@ class Payping extends Ipg{
         }
     }
 
+    public static function verifyPayment(string $code, string $refid, string $clientrefid, string $cardnumber, string $cardhashpan):array{
+
+        $paymentKey = explode("-",$clientrefid)[1];
+        $resEnglishName = DB::table("restaurants")->where(['payment_key',$paymentKey],['position', 'admin'])->first()->value('english_name');
+
+        $resDatabaseName = DB::table("restaurants")
+            ->where("english_name", $resEnglishName)
+            ->first()
+            ->value("db_name");
+
+        config(['database.connections.resConn' => [
+            'driver'    => 'mysql',
+            'host'      => env('DB_HOST', '127.0.0.1'),
+            'database'  => $resDatabaseName,
+            'username'  => env('DB_USERNAME', 'root'),
+            'password'  => env('DB_PASSWORD', ''),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ]]);
+
+        $resData = DB::table("restaurants")
+            ->where('english_name', $resEnglishName)
+            ->first();
+
+
+        // get payment info
+        $paymentInfo = DB::table("payments")->where('payment_id',$clientrefid)->first();
+
+
+        // check if foods r not paid
+        // if its paid before, dont verify payment and give back money (it will be done after about 10 min)
+        if(($paymentInfo["item_type"] == "food") && self::isFoodsPaid($paymentInfo, $paymentInfo["payment_group"], $paymentInfo["tracking_id"])){
+            return array('statusCode'=>409,"url"=>"location: ".self::$URLPaymentResult."?".
+                "statusCode=409".
+                "&amount=".$paymentInfo['amount'].
+                "&paymentId=".$clientrefid.
+                "&trackingId=".$paymentInfo['tracking_id'].
+                "&itemType=".$paymentInfo['item_type'].
+                "&item=".json_encode($paymentInfo['item'])
+            );
+        }
+
+
+        $api_key = $resData['ipg_token'];
+
+        $info_params = array(
+            "refId" => $refid,
+            'amount'=> $paymentInfo['amount'],
+        );
+
+        $result = Http::withToken($api_key)->post(self::$URLVerifyPayment,$info_params);
+
+        $verifyCardNumber = $result['cardNumber'];
+        $verifyCardHash = $result['cardHashPan'];
+        $verifyAmount = $result['amount'];
+
+
+        //check payment is valid and its not duplicate
+        if(strlen($verifyCardHash) > 10 && ($paymentInfo["verified_at"] < 1000) && ($paymentInfo["amount"] == $verifyAmount)){
+            $sqlUpdate_paymentPaidParams = array(
+                'verified_at'=>time(),
+                'payer_card'=>$verifyCardNumber,
+                'payer_card_hash'=>$verifyCardHash,
+            );
+
+            if(DB::table("payments")->where('payment_id', $clientrefid)->update($sqlUpdate_paymentPaidParams)){
+                if($paymentInfo['item_type'] == "food"){
+                    if(self::foodPaid($paymentInfo)){
+                        return array('statusCode'=>200,"url"=>"location: ".self::$URLPaymentResult."?".
+                            "statusCode=200".
+                            "&amount=".$paymentInfo['amount'].
+                            "&paymentId=".$clientrefid.
+                            "&trackingId=".$paymentInfo['tracking_id'].
+                            "&itemType=".$paymentInfo['item_type'].
+                            "&item=".json_encode(json_decode($paymentInfo['item']))
+                        );
+                    }else{
+                        return array('statusCode'=>500,"url"=>"location: ".self::$URLPaymentResult."?".
+                            "statusCode=500".
+                            "&details=item couldn't be saved as paid in restaurant".
+                            "&amount=".$paymentInfo['amount'].
+                            "&paymentId=".$clientrefid.
+                            "&trackingId=".$paymentInfo['tracking_id'].
+                            "&itemType=".$paymentInfo['item_type'].
+                            "&item=".json_decode($paymentInfo['item'])
+                        );
+                    }
+                }else{
+                    return array('statusCode'=>200,"url"=>"location: ".self::$URLPaymentResult."?".
+                        "statusCode=200".
+                        "&amount=".$paymentInfo['amount'].
+                        "&paymentId=".$clientrefid.
+                        "&trackingId=".$paymentInfo['tracking_id'].
+                        "&itemType=".$paymentInfo['item_type'].
+                        "&item=".json_decode($paymentInfo['item'])
+                    );
+                }
+            }else{
+                return array('statusCode'=>500,"url"=>"location: ".self::$URLPaymentResult."?".
+                    "statusCode=500".
+                    "&details=payment couldn't be saved on our server".
+                    "&amount=".$paymentInfo['amount'].
+                    "&paymentId=".$clientrefid.
+                    "&trackingId=".$paymentInfo['tracking_id'].
+                    "&itemType=".$paymentInfo['item_type'].
+                    "&item=".json_decode($paymentInfo['item'])
+                );
+            }
+        }else{
+            return array('statusCode'=>402,"url"=>"location: ".self::$URLPaymentResult."?".
+                "statusCode=402".
+                "&details=payment is not valid or it's duplicate".
+                "&amount=".$paymentInfo['amount'].
+                "&paymentId=".$clientrefid.
+                "&trackingId=".$paymentInfo['tracking_id'].
+                "&itemType=".$paymentInfo['item_type'].
+                "&item=".json_decode($paymentInfo['item'])
+            );
+        }
+
+    }
+
+
+
+    public static function foodPaid($paymentInfo):bool{
+        $trackingId = $paymentInfo['tracking_id'];
+
+        // get order info
+        $orderInfo = DB::connection("resConn")->table("orders")->where('tracking_id',$trackingId);
+
+        $paymentIdsArr = ($orderInfo['payment_ids'] != null) ? $orderInfo['payment_ids'] : array();
+        array_push($paymentIdsArr, $paymentInfo['payment_id']);
+
+        $paidFoods = ($orderInfo['paid_foods'] != null) ? $orderInfo['paid_foods'] : array();
+        $newPaidFoodsArr = array_merge($paidFoods, $paymentInfo['item']);
+
+        $paidAmount = ($orderInfo['paid_amount'] != null) ? $orderInfo['paid_amount'] : 0;
+        $newPaidAmount = $paidAmount + $paymentInfo['amount'];
+
+        $updatedOrder = array(
+            'payment_ids'=>$paymentIdsArr,
+            'paid_foods'=>$newPaidFoodsArr,
+            'paid_amount'=>$newPaidAmount,
+        );
+
+        if(DB::connection("resConn")->table("orders")->where('tracking_id',$trackingId)->update($updatedOrder)){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+
+
+    protected static function isFoodsPaid ($currentPaymentInfo, $paymentGroupKey, $trackingId):bool{
+        $isItemOverPaid = false;
+
+        $orderInfo = DB::connection("resConn")->table("orders")->where('tracking_id', $trackingId)->first();
+
+
+        // add current payment to payments then calculate
+        // it means imagine this payment is confirmed then what would happen? would items over paid?
+        $allPaidPaymentsInGroup = array_merge(
+            array($currentPaymentInfo),
+            DB::table("payments")->where(['payment_group',$paymentGroupKey],['verified_at',">", 1000]));
+
+        $orderedFoodsList = $orderInfo['items'];
+
+        // check if number of payed food will be more than ordered ones
+        foreach ($allPaidPaymentsInGroup as $ePPayment){
+            foreach ($ePPayment['item'] as $ePPFood){
+                for($i = 0; $i < count($orderedFoodsList); $i++){
+                    if($orderedFoodsList[$i]["id"] == $ePPFood["id"]){
+                        $orderedFoodsList[$i]['number'] = $orderedFoodsList[$i]['number'] -  $ePPFood['number'];
+                    }
+                    // check if its over paid
+                    if($orderedFoodsList[$i]['number'] < 0){
+                        $isItemOverPaid = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $isItemOverPaid;
+    }
+
 
     protected static function getFoodInfo($foods_list):array{
         $orderedFood = array();
@@ -123,7 +315,7 @@ class Payping extends Ipg{
 
         foreach ($foods_list as $eachOrderedFood){
             foreach ($all_foods as $eachFood){
-                if ($eachOrderedFood['id'] == $eachFood['foods_id']) {
+                if ($eachOrderedFood['id'] == $eachFood['id']) {
                     $priceAfterDiscount = $eachFood['price'] * ((100 - $eachFood['discount'])/100);
                     $eachOrderedFood_newArray = array(
                         'id'=>$eachOrderedFood['id'],
@@ -144,7 +336,7 @@ class Payping extends Ipg{
         $payments = DB::table("payments")->where('tracking_id',$trackingId);
         $lastPaymentNum = $payments->max('payment_num');
         $paymentBaseId = $payments->first()->value('payment_group');
-        $paidSum = $payments->where('verified_date', ">", "100")->sum('amount');
+        $paidSum = $payments->where('verified_at', ">", "100")->sum('amount');
 
 
         // get order info
@@ -166,7 +358,6 @@ class Payping extends Ipg{
             'paymentLastNum'=>$lastPaymentNum
         );
     }
-
 
 
 }
