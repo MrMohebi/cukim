@@ -32,9 +32,7 @@ class signup extends Controller
             'username'=>$request->input("username"),
             'password'=>$hashed_password,
             'name'=>$request->input("name"),
-            'token'=>CusStFunc::randomStringLower(64),
-            /*"restaurants_ids"=>'{}',
-            "payment_ids"=>'{}',*/
+            'token'=>CusStFunc::randomStringLower(64)
         ];
 
         if(DB::table("res_owners")->insert($insertNewOwner)){
