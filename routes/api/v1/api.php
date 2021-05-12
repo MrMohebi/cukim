@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\resOwner\v1\res;
+use App\Http\Controllers\api\admin\v1\login;
 
 Route::prefix("/cuki")->group(function (){
 
@@ -17,7 +18,7 @@ Route::prefix("/resOwner")->group(function (){
 });
 
 Route::prefix("admin")->group(function (){
-
+ Route::post('login',[login::class,'login']);
 });
 
 Route::prefix("/qr")->group(function (){
