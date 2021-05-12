@@ -66,7 +66,7 @@ class res extends Controller
             return response(["massage"=>"something went wrong during create restaurant","statusCode"=>500],500);
         }
 
-        
+
         // add res info row
         DB::connection("resConn")->table("info")->insert(['english_name'=>$request->input("englishName"), "persian_name"=>$request->input("persianName")]);
 
