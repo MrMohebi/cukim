@@ -19,6 +19,7 @@ class CreateFoodsTable extends Migration
             $table->string("persian_name");
             $table->string("english_name");
             $table->string("group");
+            $table->integer("group_id");
             $table->json("details");
             $table->integer("price");
             $table->string("status");
