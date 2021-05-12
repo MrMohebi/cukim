@@ -6,51 +6,48 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class login extends Controller
 {
     function login(Request $request)
     {
 
-        $validatedData = $request->validate([
+        $validatedData = Validator::make($request->all(),[
             "username" => "required",
             "password" => "required|min:7"
         ]);
 
-        if ($validatedData) {
+        if (!$validatedData->fails()) {
             $username = $request->username;
             $password = $request->password;
 
             $adminInfo = DB::table('admins')->where('username', $username)->first();
-
-
             if ($adminInfo) {
                 if (Hash::check($password, $adminInfo->password)) {
-
-
-                    return exit(json_encode(array(
+                    return response([
                         'statusCode' => 200,
-                        'data' => array(
-                            "token" => $adminInfo['token'],
-                            "position" => $adminInfo['position'],
+                        'data' => [
+                            "token" => $adminInfo->token,
+                            "position" => $adminInfo->position,
                             "username" => $request->username,
-                            "name" => $adminInfo['name'],
-                            "phone" => $adminInfo['phone'],
-                            "lastLogin" => $adminInfo['last_login'],
-                            "promotedBy" => $adminInfo['promoted_by'],
-                            "createdDate" => $adminInfo['created_date'],
-                        )
-                    )));
+                            "name" => $adminInfo->name,
+                            "phone" => $adminInfo->phone,
+                            "lastLogin" => $adminInfo->last_login,
+                            "promotedBy" => $adminInfo->promoted_by,
+                            "createdDate" => $adminInfo->created_at,
+                        ]
+                    ]);
+
                 } else {
-                    return exit(json_encode(array('statusCode' => 401, 'details' => "username or password are wrong")));
+                    return response(['message' => "username or password are wrong",'statusCode' => 401,],401);
                 }
             } else {
-                return exit(json_encode(array('statusCode' => 401, 'details' => "username or password are wrong")));
+                return response(['message' => "username or password are wrong",'statusCode' => 401],401);
             }
 
-
         } else {
-            exit(json_encode(array('statusCode' => 400, "details" => "wrong inputs")));
+            return response(['message' => "wrong inputs",'statusCode' => 400],401);
         }
     }
 
