@@ -19,10 +19,10 @@ class CreateResOwnersTable extends Migration
             $table->string("password");
             $table->string("name");
             $table->string('token');
-            $table->json("restaurants_ids");
-            $table->json("payment_ids");
-            $table->string('email');
-            $table->string('phone');
+            $table->json("restaurants_ids")->nullable();
+            $table->json("payment_ids")->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
             $table->mediumInteger('verification_code')->nullable();
             $table->tinyInteger('verification_code_tries')->nullable();
             $table->timestamps();
