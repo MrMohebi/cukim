@@ -3,6 +3,7 @@
 
 namespace App\CustomClasses\Ipg;
 use App\CustomClasses\AbstractClasses\Ipg;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use App\CustomFunctions\CusStFunc;
@@ -127,17 +128,8 @@ class Payping extends Ipg{
             ->first()
             ->value("db_name");
 
-        config(['database.connections.resConn' => [
-            'driver'    => 'mysql',
-            'host'      => env('DB_HOST', '127.0.0.1'),
-            'database'  => $resDatabaseName,
-            'username'  => env('DB_USERNAME', 'root'),
-            'password'  => env('DB_PASSWORD', ''),
-            'charset'   => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix'    => '',
-            'strict'    => false,
-        ]]);
+        Config::set('database.connections.resConn.database', $resDatabaseName);
+
 
         $resData = DB::table("restaurants")
             ->where('english_name', $resEnglishName)

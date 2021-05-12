@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
 class setResConn
@@ -23,17 +24,7 @@ class setResConn
                 ->first()
                 ->value("db_name");
 
-            config(['database.connections.resConn' => [
-                'driver'    => 'mysql',
-                'host'      => env('DB_HOST', '127.0.0.1'),
-                'database'  => $resDatabaseName,
-                'username'  => env('DB_USERNAME', 'root'),
-                'password'  => env('DB_PASSWORD', ''),
-                'charset'   => 'utf8',
-                'collation' => 'utf8_unicode_ci',
-                'prefix'    => '',
-                'strict'    => false,
-            ]]);
+            Config::set('database.connections.resConn.database', $resDatabaseName);
         }
         return $next($request);
     }
