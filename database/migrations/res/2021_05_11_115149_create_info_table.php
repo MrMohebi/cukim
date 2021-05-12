@@ -15,7 +15,7 @@ class CreateInfoTable extends Migration
     {
         Schema::create('info', function (Blueprint $table) {
             $table->id();
-            $table->string("status");
+            $table->string("status")->default("open");
             $table->string("persian_name");
             $table->string("english_name");
             $table->string("counter_phone")->nullable();
