@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateResUsersTable extends Migration
+class CreateResOwnersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateResUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('res_users', function (Blueprint $table) {
+        Schema::create('res_owners', function (Blueprint $table) {
             $table->id();
             $table->string('username');
             $table->string("password");
