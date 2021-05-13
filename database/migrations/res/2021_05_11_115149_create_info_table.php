@@ -25,12 +25,12 @@ class CreateInfoTable extends Migration
             $table->string("owner")->nullable();
             $table->json("employers")->nullable();
             $table->json("social_links")->nullable();
-            $table->json("open_time")->default([[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]]);
+            $table->json("open_time")->nullable();
             $table->json("type")->nullable();
             $table->decimal("rate")->nullable();
             $table->string("logo_link")->default("https://dl.cuki.ir/resimg/cuki/logo/logoX256.png");
             $table->string("favicon_link")->default("https://dl.cuki.ir/resimg/cuki/favicon/faviconX64.png");
-            $table->integer("medium_order_price");
+            $table->integer("medium_order_price")->nullable();
             $table->timestamps();
         });
     }

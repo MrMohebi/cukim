@@ -16,10 +16,10 @@ class CreateCustomersTable extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->string('phone');
-            $table->mediumInteger('order_times');
+            $table->mediumInteger('order_times')->default(0);
             $table->json('order_list')->nullable();
-            $table->integer('score');
-            $table->integer('total_order_price');
+            $table->integer('score')->default(0);
+            $table->integer('total_order_price')->default(0);
             $table->string('rank')->nullable();
             $table->json('off_codes')->nullable();
             $table->timestamps();

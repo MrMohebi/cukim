@@ -18,7 +18,6 @@ class CreatePagersTable extends Migration
             $table->string("table");
             $table->string("status")->default("notCheck");
             $table->string("user_phone");
-            $table->string("table");
             $table->timestamps();
         });
     }

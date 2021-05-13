@@ -20,16 +20,16 @@ class CreateRestaurantsTable extends Migration
             $table->string('position');
             $table->string('persian_name');
             $table->string('english_name');
-            $table->smallInteger('res_code');
+            $table->smallInteger('res_code')->nullable();
             $table->string('token');
             $table->string('owner_id');
             $table->string('owner_name');
-            $table->json('permissions');
+            $table->json('permissions')->nullable();
             $table->string('payment_key');
             $table->string('db_name');
-            $table->string('ipg_name');
-            $table->string('ipg_token');
-            $table->string('ipg_data');
+            $table->string('ipg_name')->nullable();
+            $table->string('ipg_token')->nullable();
+            $table->string('ipg_data')->nullable();
             $table->timestamps();
         });
     }

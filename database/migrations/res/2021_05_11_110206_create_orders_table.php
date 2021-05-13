@@ -19,7 +19,7 @@ class CreateOrdersTable extends Migration
             $table->string("user_phone");
             $table->string("order_status")->default("inLine");
             $table->json("items");
-            $table->integer("delivery_price");
+            $table->integer("delivery_price")->nullable();
             $table->json("address")->nullable();
             $table->string("table")->nullable();
             $table->json("details")->nullable();

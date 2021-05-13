@@ -22,7 +22,7 @@ class CreatePaymentsTable extends Migration
             $table->string("item_type")->nullable();
             $table->string("payment_id");
             $table->string("payment_key");
-            $table->string("payment_code");
+            $table->string("payment_code")->nullable();
             $table->string("payment_group");
             $table->smallInteger("payment_num");
             $table->string("ipg")->nullable();
