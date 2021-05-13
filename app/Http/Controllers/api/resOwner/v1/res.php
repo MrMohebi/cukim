@@ -36,7 +36,7 @@ class res extends Controller
         $ownerInfo = DB::table("res_owners")->where("token",$request->input("token"))->first();
 
         $hashed_password = password_hash($request->input("password"), PASSWORD_DEFAULT);
-        $dbName = $request->input("englishName") . "_res";
+        $dbName = 'cuki_'.$request->input("englishName") . "_res";
         $paymentKey = self::generatePaymentKey($request->input("englishName"));
 
         $insertNewResParams = array(
@@ -48,9 +48,8 @@ class res extends Controller
             'token'=>CusStFunc::randomStringLower(64),
             "payment_key"=>$paymentKey,
             "position"=>"admin",
-            "owner_id"=>$ownerInfo["id"],
-            "owner_name"=>$ownerInfo["name"],
-            "res_code"=>DB::table("restaurants")->get()->last()->id + 10,
+            "owner_id"=>$ownerInfo->id,
+            "owner_name"=>$ownerInfo->name,
         );
         if(!DB::table("restaurants")->insert($insertNewResParams)){
             return response(["massage"=>"something went wrong during create restaurant","statusCode"=>500],500);
@@ -62,13 +61,21 @@ class res extends Controller
             return response(["massage"=>"something went wrong during create restaurant","statusCode"=>500],500);
         }
         Config::set('database.connections.resConn.database', $dbName);
-        if(!Artisan::call("migrate --database=resConn --path=database/migrations/res")){
-            return response(["massage"=>"something went wrong during create restaurant","statusCode"=>500],500);
-        }
+        Artisan::call("migrate --database=resConn --path=database/migrations/res");
+
+
+        // add res code
+        DB::table("restaurants")->where('db_name',$dbName)->update(['res_code'=>DB::table("restaurants")->get()->last()->id + 10]);
 
 
         // add res info row
-        DB::connection("resConn")->table("info")->insert(['english_name'=>$request->input("englishName"), "persian_name"=>$request->input("persianName")]);
+        DB::connection("resConn")
+            ->table("info")
+            ->insert([
+                    'english_name'=> $request->input("englishName"),
+                    "persian_name"=>$request->input("persianName"),
+                    "open_time"=>'[[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]]'
+                ]);
 
 
         return response(["statusCode"=>200]);
