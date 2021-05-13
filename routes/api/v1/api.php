@@ -12,6 +12,7 @@ Route::prefix("/cuki")->group(function (){
 
 Route::prefix("/res")->group(function (){
 Route::post('createCategory',[createCategory::class,['createCategory']]);
+Route::post('createFood',[createCategory::class,['createCategory']]);
 });
 
 Route::prefix("/resOwner")->group(function (){
