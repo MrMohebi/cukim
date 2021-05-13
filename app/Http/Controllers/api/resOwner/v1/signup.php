@@ -24,7 +24,7 @@ class signup extends Controller
         if(
             DB::table("res_owners")->where("username",$request->input("username"))->exists()
         ){
-            return response(["massage"=>'username or englishName are duplicated', "statusCode"=>400],"400");
+            return response(["massage"=>'username is duplicated', "statusCode"=>400],"400");
         }
         $hashed_password = password_hash($request->input("password"), PASSWORD_DEFAULT);
 
