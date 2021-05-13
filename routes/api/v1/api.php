@@ -10,10 +10,16 @@ Route::prefix("/cuki")->group(function (){
 
 });
 
+
+
 Route::prefix("/res")->group(function (){
-    Route::post('createCategory',[createCategory::class,['createCategory']]);
-    Route::post('createFood',[createCategory::class,['createCategory']]);
+    Route::group(["middleware"=>["resToken"]], function (){
+        Route::post('createCategory',[createCategory::class,['createCategory']]);
+        Route::post('createFood',[createCategory::class,['createCategory']]);
+    });
 });
+
+
 
 Route::prefix("/resOwner")->group(function (){
     Route::group(["middleware"=>['resOwnerToken']], function (){
@@ -23,13 +29,19 @@ Route::prefix("/resOwner")->group(function (){
     Route::post("/signup",[signup::class,"signup"]);
 });
 
+
+
 Route::prefix("admin")->group(function (){
- Route::post('login',[login::class,'login']);
+    Route::post('login',[login::class,'login']);
 });
+
+
 
 Route::prefix("/qr")->group(function (){
 
 });
+
+
 
 Route::prefix("/pay")->group(function (){
 

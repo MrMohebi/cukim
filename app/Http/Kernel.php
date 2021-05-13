@@ -47,7 +47,11 @@ class Kernel extends HttpKernel
 
         "resOwnerToken"=>[
             \App\Http\Middleware\tokenCheck\resOwnerTokenCheck::class,
-        ]
+        ],
+
+        "resToken"=>[
+            \App\Http\Middleware\tokenCheck\resTokenCheck::class
+        ],
     ];
 
     /**
