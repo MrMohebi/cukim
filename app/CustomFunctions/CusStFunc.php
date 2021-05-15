@@ -3,6 +3,7 @@
 
 namespace App\CustomFunctions;
 
+use Illuminate\Support\Str;
 
 class CusStFunc
 {
@@ -30,5 +31,13 @@ class CusStFunc
         return preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/', function ($match) {
             return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UTF-16BE');
         }, $persianStr);
+    }
+
+    public static function arrayKeysToCamel($array):array{
+        $result = array();
+        foreach ($array as $key=> $val){
+            $result[Str::camel($key)] = $val;
+        }
+        return $result;
     }
 }
