@@ -45,8 +45,8 @@
  ## ResOwner API
 | address | Description  |
 | --- |---   |
-| [signup](#/resowner/signup) | register a new res owner |
-| [createNewRes](#create-new-restaurant) | create a new restaurant |
+| [signup](#resownersignup-post) | register a new res owner |
+| [createNewRes](#resownercreatenewres-post) | create a new restaurant |
 
 
 > ### ```/resOwner/signup``` ```POST```
@@ -65,9 +65,8 @@
 
 
 
-### create new restaurant
-
-> ```url: PUBLIC-DOMAIN/api/v1/resOwner/createNewRes``` ```POST```
+> ### ```/resOwner/createNewRes``` ```POST```
+>
 > #### Required fields:
 >   - **token**
 >   - **username**
