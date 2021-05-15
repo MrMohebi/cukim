@@ -45,13 +45,12 @@
  ## ResOwner API
 | address | Description  |
 | --- |---   |
-| [signup](#sign-up-res-owner) | register a new res owner |
+| [signup](#/resowner/signup) | register a new res owner |
 | [createNewRes](#create-new-restaurant) | create a new restaurant |
 
 
-### sign up res owner
-
-> ```url: PUBLIC-DOMAIN/api/v1/resOwner/signUp``` ```POST```
+> ### ```/resOwner/signup``` ```POST```
+>
 > #### Required fields:
 >   - **username**
 >   - **password**
