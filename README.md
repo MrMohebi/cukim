@@ -9,7 +9,7 @@
 
 
 
-<hr style="height: 7px; border-radius: 3px;">
+<hr>
 
 ## Client API 
 | address | Description  |
@@ -24,7 +24,7 @@
 
 
 
-<hr style="height: 7px; border-radius: 3px;">
+<hr>
 
 ## Res API
 | address | Description  |
@@ -40,7 +40,7 @@
 
 
 
-<hr style="height: 7px; border-radius: 3px;">
+<hr>
 
  ## ResOwner API
 | address | Description  |
@@ -48,7 +48,6 @@
 | [signup](#sign-up-res-owner) | register a new res owner |
 | [createNewRes](#create-new-restaurant) | create a new restaurant |
 
-<hr>
 
 ### sign up res owner
 
@@ -64,7 +63,6 @@
 >     "statusCode": "[code]"
 >   }
 >   ```
-<hr>
 
 
 
@@ -84,14 +82,13 @@
 >     "statusCode": "[code]"
 >   }
 >   ```
+
+
+
+
+
+
 <hr>
-
-
-
-
-
-
-<hr style="height: 7px; border-radius: 3px;">
 
 ## Admin API
 | address | Description  |
