@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\resOwner\v1;
 
 use App\CustomFunctions\CusStFunc;
+use App\DatabaseNames\DN;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -32,7 +33,8 @@ class signup extends Controller
             'username'=>$request->input("username"),
             'password'=>$hashed_password,
             'name'=>$request->input("name"),
-            'token'=>CusStFunc::randomStringLower(64)
+            'token'=>CusStFunc::randomStringLower(64),
+            DN::CA=>time(),
         ];
 
         if(DB::table("res_owners")->insert($insertNewOwner)){
