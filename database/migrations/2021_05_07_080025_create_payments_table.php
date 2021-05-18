@@ -32,9 +32,11 @@ class CreatePaymentsTable extends Migration
             $table->string("payer_card")->nullable();
             $table->string("payer_card_hash")->nullable();
             $table->string("payping_code")->nullable();
-            $table->timestamp("paid_at")->nullable();
-            $table->timestamp("verified_at")->nullable();
-            $table->timestamps();
+            $table->bigInteger("paid_at")->nullable();
+            $table->bigInteger("verified_at")->nullable();
+            $table->bigInteger("created_at")->nullable();
+            $table->bigInteger("deleted_at")->nullable();
+            $table->bigInteger("updated_at")->nullable();
         });
     }
 

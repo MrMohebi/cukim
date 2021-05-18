@@ -25,7 +25,9 @@ class CreateResOwnersTable extends Migration
             $table->string('phone')->nullable();
             $table->mediumInteger('verification_code')->nullable();
             $table->tinyInteger('verification_code_tries')->nullable();
-            $table->timestamps();
+            $table->bigInteger("created_at")->nullable();
+            $table->bigInteger("deleted_at")->nullable();
+            $table->bigInteger("updated_at")->nullable();
         });
     }
 

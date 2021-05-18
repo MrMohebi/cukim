@@ -23,9 +23,11 @@ class CreateAdminsTable extends Migration
             $table->string("phone");
             $table->string("status")->default("active");
             $table->string("token");
-            $table->timestamp("last_login");
+            $table->bigInteger("last_login");
             $table->string("promoted_by");
-            $table->timestamps();
+            $table->bigInteger("created_at")->nullable();
+            $table->bigInteger("deleted_at")->nullable();
+            $table->bigInteger("updated_at")->nullable();
         });
     }
 

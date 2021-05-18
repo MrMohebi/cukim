@@ -24,7 +24,7 @@ class CreateInvoicesTable extends Migration
             $table->bigInteger("offline_from_previous");
             $table->bigInteger("to_pay")->nullable();
             $table->string("status")->default("created-notPaid");
-            $table->timestamp("paid_at")->nullable();
+            $table->bigInteger("paid_at")->nullable();
             $table->bigInteger("paid_amount")->nullable();
             $table->string("res_card_number")->nullable();
             $table->string("our_card_number")->nullable();
@@ -33,7 +33,10 @@ class CreateInvoicesTable extends Migration
             $table->string("creator_support_id");
             $table->string("payer_support_name")->nullable();
             $table->string("payer_support_id")->nullable();
-            $table->timestamps();
+            $table->tinyInteger('verification_code_tries')->nullable();
+            $table->bigInteger("created_at")->nullable();
+            $table->bigInteger("deleted_at")->nullable();
+            $table->bigInteger("updated_at")->nullable();
         });
     }
 

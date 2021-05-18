@@ -25,7 +25,9 @@ class CreateCommentsTable extends Migration
             $table->string("order_type")->nullable();
             $table->json("pros_cons")->nullable();
             $table->string("status")->default("notConfirmed");
-            $table->timestamps();
+            $table->bigInteger("created_at")->nullable();
+            $table->bigInteger("deleted_at")->nullable();
+            $table->bigInteger("updated_at")->nullable();
         });
     }
 

@@ -18,7 +18,9 @@ class CreatePagersTable extends Migration
             $table->string("table");
             $table->string("status")->default("notCheck");
             $table->string("user_phone");
-            $table->timestamps();
+            $table->bigInteger("created_at")->nullable();
+            $table->bigInteger("deleted_at")->nullable();
+            $table->bigInteger("updated_at")->nullable();
         });
     }
 

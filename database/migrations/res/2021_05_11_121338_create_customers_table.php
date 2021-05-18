@@ -22,7 +22,9 @@ class CreateCustomersTable extends Migration
             $table->integer('total_order_price')->default(0);
             $table->string('rank')->nullable();
             $table->json('off_codes')->nullable();
-            $table->timestamps();
+            $table->bigInteger("created_at")->nullable();
+            $table->bigInteger("deleted_at")->nullable();
+            $table->bigInteger("updated_at")->nullable();
         });
     }
 

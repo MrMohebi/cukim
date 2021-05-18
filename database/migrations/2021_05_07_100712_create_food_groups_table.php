@@ -23,7 +23,9 @@ class CreateFoodGroupsTable extends Migration
             $table->string("type")->default("restaurant");
             $table->string("average_color")->nullable();
             $table->string("res_english_name")->default("general");
-            $table->timestamps();
+            $table->bigInteger("created_at")->nullable();
+            $table->bigInteger("deleted_at")->nullable();
+            $table->bigInteger("updated_at")->nullable();
         });
     }
 

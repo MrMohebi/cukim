@@ -33,7 +33,9 @@ class CreateFoodsTable extends Migration
             $table->string("related_main_english_name")->nullable();
             $table->json("related_price_range")->nullable();
             $table->string("related_thumbnail")->nullable();
-            $table->timestamps();
+            $table->bigInteger("created_at")->nullable();
+            $table->bigInteger("deleted_at")->nullable();
+            $table->bigInteger("updated_at")->nullable();
         });
     }
 

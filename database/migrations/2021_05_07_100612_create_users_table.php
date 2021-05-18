@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->string('phone');
-            $table->timestamp('birthday')->nullable();
+            $table->bigInteger('birthday')->nullable();
             $table->string('status')->default("active");
             $table->string('job')->nullable();
             $table->bigInteger('amount')->default(0);
@@ -32,7 +32,9 @@ class CreateUsersTable extends Migration
             $table->json('orders')->nullable();
             $table->string('password')->nullable();
             $table->rememberToken();
-            $table->timestamps();
+            $table->bigInteger("created_at")->nullable();
+            $table->bigInteger("deleted_at")->nullable();
+            $table->bigInteger("updated_at")->nullable();
         });
     }
 

@@ -21,7 +21,9 @@ class CreateQrsTable extends Migration
             $table->string("res_base_url");
             $table->string("res_final_url");
             $table->string("status")->default("active");
-            $table->timestamps();
+            $table->bigInteger("created_at")->nullable();
+            $table->bigInteger("deleted_at")->nullable();
+            $table->bigInteger("updated_at")->nullable();
         });
     }
 

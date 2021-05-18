@@ -30,7 +30,9 @@ class CreateRestaurantsTable extends Migration
             $table->string('ipg_name')->nullable();
             $table->string('ipg_token')->nullable();
             $table->string('ipg_data')->nullable();
-            $table->timestamps();
+            $table->bigInteger("created_at")->nullable();
+            $table->bigInteger("deleted_at")->nullable();
+            $table->bigInteger("updated_at")->nullable();
         });
     }
 

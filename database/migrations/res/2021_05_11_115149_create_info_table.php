@@ -31,7 +31,9 @@ class CreateInfoTable extends Migration
             $table->string("logo_link")->default("https://dl.cuki.ir/resimg/cuki/logo/logoX256.png");
             $table->string("favicon_link")->default("https://dl.cuki.ir/resimg/cuki/favicon/faviconX64.png");
             $table->integer("medium_order_price")->nullable();
-            $table->timestamps();
+            $table->bigInteger("created_at")->nullable();
+            $table->bigInteger("deleted_at")->nullable();
+            $table->bigInteger("updated_at")->nullable();
         });
     }
 
