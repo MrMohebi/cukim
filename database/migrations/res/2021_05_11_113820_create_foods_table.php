@@ -17,9 +17,9 @@ class CreateFoodsTable extends Migration
             $table->id();
             $table->string("counter_app_food_id")->nullable();
             $table->string("persian_name");
-            $table->string("english_name");
+            $table->string("english_name")->nullable();
             $table->string("group");
-            $table->integer("group_id");
+            $table->integer("group_id")->nullable();
             $table->json("details")->nullable();
             $table->integer("price");
             $table->string("status")->default("outOfStock");
