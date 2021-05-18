@@ -7,7 +7,7 @@ use App\Http\Controllers\api\resOwner\v1\signup;
 use App\Http\Controllers\api\resOwner\v1\signin;
 use App\Http\Controllers\api\resOwner\v1\smsRO;
 use App\Http\Controllers\api\admin\v1\login;
-use App\Http\Controllers\createNewFood;
+use App\Http\Controllers\api\res\v1\createNewFood;
 use App\Http\Controllers\api\res\v1\createCategory;
 Route::prefix("/cuki")->group(function (){
 
