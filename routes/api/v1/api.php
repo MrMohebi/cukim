@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\resOwner\v1\res;
 use App\Http\Controllers\api\resOwner\v1\signup;
 use App\Http\Controllers\api\resOwner\v1\signin;
+use App\Http\Controllers\api\resOwner\v1\smsRO;
 use App\Http\Controllers\api\admin\v1\login;
 use App\Http\Controllers\createNewFood;
 use App\Http\Controllers\api\res\v1\createCategory;
@@ -26,6 +27,8 @@ Route::prefix("/res")->group(function (){
 Route::prefix("/resOwner")->group(function (){
     Route::group(["middleware"=>['resOwnerToken']], function (){
         Route::post("/createNewRes",[res::class,"createNewRes"]);
+        Route::post("/sendVCode",[smsRO::class,"sendVCode"]);
+        Route::post("/verifyVCode",[smsRO::class,"verifyVCode"]);
     });
     Route::post("/signin",[signin::class,"signin"]);
     Route::post("/signup",[signup::class,"signup"]);
