@@ -15,7 +15,12 @@ class DN
         "RESTAURANTS"=>"restaurants",
     ];
     const resTables = [
-        "resFOODS"=>"foods"
+        "resFOODS"=>"foods",
+        "resINFO"=>"info"
+    ];
+    const resINFO = [
+        "counterPhone"=>'counter_phone',
+        "type"=>"type",
     ];
 
     const RESTAURANTS = [
@@ -37,6 +42,7 @@ class DN
         "logo"=>"logo",
         "status"=>"status",
         "type"=>"type",
+        "rank"=>"rank",
         "resEName"=>"res_english_name",
         "averageColor"=>"average_color",
     ];
