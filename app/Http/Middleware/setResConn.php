@@ -28,7 +28,6 @@ class setResConn
         if($request->input("resEnglishName")){
             $resDatabaseName = DB::table(DN::tables["RESTAURANTS"])
                 ->where(DN::RESTAURANTS["eName"], $request->input("resEnglishName"))
-                ->first()
                 ->value(DN::RESTAURANTS["DBName"]);
         }
         if(strlen($resDatabaseName) > 2){
