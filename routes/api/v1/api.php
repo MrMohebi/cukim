@@ -9,7 +9,14 @@ use App\Http\Controllers\api\resOwner\v1\smsRO;
 use App\Http\Controllers\api\admin\v1\login;
 use App\Http\Controllers\api\res\v1\createNewFood;
 use App\Http\Controllers\api\res\v1\createCategory;
+use App\Http\Controllers\api\cuki\v1\resData;
+
+
+
 Route::prefix("/cuki")->group(function (){
+
+    Route::post("/getResData",[resData::class,"getResData"]);
+    Route::post("/getResParts",[resData::class,"getResParts"]);
 
 });
 
