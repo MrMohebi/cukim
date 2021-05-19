@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\CustomFunctions\CusStFunc;
+use App\DatabaseNames\DN;
 
 class res extends Controller
 {
@@ -50,6 +51,8 @@ class res extends Controller
             "position"=>"admin",
             "owner_id"=>$ownerInfo->id,
             "owner_name"=>$ownerInfo->name,
+            DN::CA => \Carbon\Carbon::now()->timestamp,
+            DN::UA=> \Carbon\Carbon::now()->timestamp,
         );
         if(!DB::table("restaurants")->insert($insertNewResParams)){
             return response(["massage"=>"something went wrong during create restaurant","statusCode"=>500],500);
@@ -74,7 +77,9 @@ class res extends Controller
             ->insert([
                     'english_name'=> $request->input("englishName"),
                     "persian_name"=>$request->input("persianName"),
-                    "open_time"=>'[[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]]'
+                    "open_time"=>'[[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]]',
+                    DN::CA => \Carbon\Carbon::now()->timestamp,
+                    DN::UA=> \Carbon\Carbon::now()->timestamp,
                 ]);
 
 
