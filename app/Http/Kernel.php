@@ -52,6 +52,10 @@ class Kernel extends HttpKernel
         "resToken"=>[
             \App\Http\Middleware\tokenCheck\resTokenCheck::class
         ],
+
+        "cukiToken"=>[
+            \App\Http\Middleware\tokenCheck\cukiTokenCheck::class
+        ],
     ];
 
     /**
