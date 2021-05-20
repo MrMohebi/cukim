@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-
+use App\CustomFunctions\CusStFunc;
 
 class resData extends Controller
 {
@@ -41,7 +41,7 @@ class resData extends Controller
     static public function getResInfo():array{
         $resInfo = DB::connection("resConn")->table(DN::resTables["resINFO"])->get()->last();
         unset($resInfo->{DN::resINFO["counterPhone"]});
-        return json_decode(json_encode($resInfo),true);
+        return CusStFunc::arrayKeysToCamel(json_decode(json_encode($resInfo),true));
     }
 
 
@@ -75,6 +75,6 @@ class resData extends Controller
             );
             $foodsList[$i]->{DN::resFOODS["group"]} = $groupInfo;
         }
-        return json_decode(json_encode($foodsList),true);
+        return CusStFunc::arrayKeysToCamel(json_decode(json_encode($foodsList),true));
     }
 }
