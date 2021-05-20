@@ -124,4 +124,14 @@ class user extends Controller
         return response(["statusCode"=> 200]);
     }
 
+
+    public function getUserInfo(Request $request){
+        $user = DB::table(DN::tables["USERS"])->where(DN::USERS["token"],$request->input("token"))->first();
+        unset($user->{DN::USERS["vCode"]});
+        unset($user->{DN::USERS["vCodeTries"]});
+        unset($user->{DN::USERS["password"]});
+
+        return response(["data"=>CusStFunc::arrayKeysToCamel(json_decode(json_encode($user))),"statusCode"=>200]);
+    }
+
 }
