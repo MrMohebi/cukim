@@ -13,7 +13,28 @@ class DN
         "RES_OWNERS"=>"res_owners",
         "FOOD_GROUPS"=>"food_groups",
         "RESTAURANTS"=>"restaurants",
+        "USERS"=>"users",
     ];
+
+    const USERS = [
+        "phone"=>"phone",
+        "token"=>"token",
+        "name"=>"name",
+        "vCode"=>"verification_code",
+        "vCodeTries"=>"verification_code_tries",
+        "birthday"=>"birthday",
+        "status"=>"status",
+        "type"=>"type",
+        "job"=>"job",
+        "amount"=>"amount",
+        "offCodes"=>"off_codes",
+        "info"=>"info",
+        "favPlaces"=>"favorite_places",
+        "payments"=>"payments",
+        "orders"=>"orders",
+        "password"=>"password"
+    ];
+
     const resTables = [
         "resFOODS"=>"foods",
         "resINFO"=>"info"
