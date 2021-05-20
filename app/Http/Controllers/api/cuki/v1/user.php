@@ -98,4 +98,30 @@ class user extends Controller
 
     }
 
+    public function setUserInfo(Request $request){
+        $validator = Validator::make($request->all(),[
+            'name'=>"required|min:3",
+            'job'=>"max:254",
+            'birthday'=>"numeric",
+        ]);
+
+        if($validator->fails())
+            return response(["massage"=>$validator->errors()->all(), "statusCode"=>400],"400");
+
+        $name = $request->input("name");
+        $job = $request->input("job");
+        $birthday = $request->input("birthday");
+
+        $user = DB::table(DN::tables["USERS"])->where(DN::USERS["token"],$request->input("token"));
+
+        $user->update([
+            DN::USERS["name"]=>$name,
+            DN::USERS["job"]=>$job,
+            DN::USERS["birthday"]=>$birthday,
+            DN::UA=>Carbon::now()->timestamp,
+        ]);
+
+        return response(["statusCode"=> 200]);
+    }
+
 }

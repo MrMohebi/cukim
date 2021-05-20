@@ -13,7 +13,9 @@ use App\Http\Controllers\api\cuki\v1\user;
 
 
 Route::prefix("/cuki")->group(function (){
-
+    Route::group(["middleware"=>["cukiToken"]], function () {
+        Route::post("/setUserInfo",[user::class,"setUserInfo"]);
+    });
 
     Route::post("/sendVCode",[user::class,"sendVCode"]);
     Route::post("/verifyVCode",[user::class,"verifyVCode"]);
