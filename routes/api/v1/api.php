@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\resOwner\v1\res;
 use App\Http\Controllers\api\resOwner\v1\signup;
@@ -10,11 +9,14 @@ use App\Http\Controllers\api\admin\v1\login;
 use App\Http\Controllers\api\res\v1\createNewFood;
 use App\Http\Controllers\api\res\v1\createCategory;
 use App\Http\Controllers\api\cuki\v1\resData;
-
+use App\Http\Controllers\api\cuki\v1\user;
 
 
 Route::prefix("/cuki")->group(function (){
 
+
+    Route::post("/sendVCode",[user::class,"sendVCode"]);
+    Route::post("/verifyVCode",[user::class,"verifyVCode"]);
     Route::post("/getResData",[resData::class,"getResData"]);
     Route::post("/getResParts",[resData::class,"getResParts"]);
 
