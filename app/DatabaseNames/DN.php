@@ -37,11 +37,49 @@ class DN
 
     const resTables = [
         "resFOODS"=>"foods",
-        "resINFO"=>"info"
+        "resINFO"=>"info",
+        'resORDERS'=>"orders"
     ];
+
+    const resORDERS = [
+        "trackingId"=>"tracking_id",
+        "userPhone"=>"user_phone",
+        "status"=>"order_status",
+        "items"=>"items",
+        "deliveryPrice"=>"delivery_price",
+        "address"=>"address",
+        "table"=>"table",
+        "details"=>"details",
+        "tPrice"=>"total_price",
+        "deliveredAt"=>"delivered_at",
+        "deliveryAt"=>"delivery_at",
+        "deleteReason"=>"delete_reason",
+        "offcode"=>"offcode",
+        "howServe"=>"how_to_serve",
+        "paymentStatus"=>"payment_status",
+        "paidFoods"=>"paid_foods",
+        "paidAmount"=>"paid_amount",
+        "paymentIds"=>"payment_ids",
+        "counterAppStatus"=>"counter_app_status",
+    ];
+
     const resINFO = [
+        "pName"=>"persian_name",
+        "eName"=>"english_name",
         "counterPhone"=>'counter_phone',
         "type"=>"type",
+        "status"=>"status",
+        "phones"=>"phones",
+        "address"=>"address",
+        "addressLink"=>"address_link",
+        "owner"=>"owner",
+        "employers"=>"employers",
+        "socialLinks"=>"social_links",
+        "openTime"=>"open_time",
+        "rate"=>"rate",
+        "logoLink"=>"logo_link",
+        "faviconLink"=>"favicon_link",
+        "minOrderPrice"=>"minimum_order_price",
     ];
 
     const RESTAURANTS = [
@@ -86,5 +124,6 @@ class DN
         "relatedEName"=>"related_main_english_name",
         "relatedPriceRange"=>"related_price_range",
         "relatedThumbnail"=>"related_thumbnail",
+        "counterAppFoodId"=>"counter_app_food_id"
     ];
 }
