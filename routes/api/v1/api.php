@@ -10,12 +10,13 @@ use App\Http\Controllers\api\res\v1\createNewFood;
 use App\Http\Controllers\api\res\v1\createCategory;
 use App\Http\Controllers\api\cuki\v1\resData;
 use App\Http\Controllers\api\cuki\v1\user;
-
+use App\Http\Controllers\api\cuki\v1\order;
 
 Route::prefix("/cuki")->group(function (){
     Route::group(["middleware"=>["cukiToken"]], function () {
         Route::post("/setUserInfo",[user::class,"setUserInfo"]);
         Route::post("/getUserInfo",[user::class,"getUserInfo"]);
+        Route::post("/sendOrder",[order::class,"sendOrder"]);
     });
 
     Route::post("/sendVCode",[user::class,"sendVCode"]);
