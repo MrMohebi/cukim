@@ -83,9 +83,21 @@ class DN
     ];
 
     const RESTAURANTS = [
+        "username"=>"username",
         "token"=>"token",
+        "pName"=>"persian_name",
         "eName"=>"english_name",
         "DBName"=>"db_name",
+        "password"=>"password",
+        "position"=>"position",
+        "code"=>"res_code",
+        "ownerId"=>"owner_id",
+        "ownerName"=>"owner_name",
+        "permissions"=>'permissions',
+        "paymentKey"=>"payment_key",
+        "ipgName"=>"ipg_name",
+        "ipgToken"=>"ipg_token",
+        "ipgData"=>"ipg_data"
     ];
 
     const RES_OWNERS = [
