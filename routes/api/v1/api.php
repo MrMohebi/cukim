@@ -21,6 +21,7 @@ Route::prefix("/cuki")->group(function (){
         Route::post("/getUserInfo",[user::class,"getUserInfo"]);
         Route::post("/sendOrder",[order::class,"sendOrder"]);
         Route::post("/getCommentsByFoodId",[comment::class,"getCommentsByFoodId"]);
+        Route::post("/sendComment",[comment::class,"sendComment"]);
 
     });
 
