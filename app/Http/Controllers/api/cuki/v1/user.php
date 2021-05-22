@@ -124,6 +124,63 @@ class user extends Controller
         return response(["statusCode"=> 200]);
     }
 
+    public function getTempToken(Request $request){
+        $validator = Validator::make($request->all(),[
+            'resEnglishName'=>"required|min:3",
+            'ip'=>"required|ip",
+            'userAgent'=>"required",
+        ]);
+
+        if($validator->fails())
+            return response(["massage"=>$validator->errors()->all(), "statusCode"=>400],400);
+
+
+        $resEnglishName =  $request->input("resEnglishName");
+        $ip =  $request->input("ip");
+        $isp =  $request->input("isp");
+        $city =  $request->input("city");
+        $userAgent =  $request->input("userAgent");
+
+        if(!DB::table(DN::tables["RESTAURANTS"])->where(DN::RESTAURANTS["eName"],$resEnglishName)->exists())
+            return response(["massage"=>"restaurant is not valid", "statusCode"=>400],400);
+
+
+        $newUserInfo_str = json_encode(array(
+            'resEnglishName'=>$resEnglishName,
+            'ip'=>$ip,
+            'isp'=>$isp,
+            'city'=>$city,
+            'userAgent'=>$userAgent,
+        ));
+
+        // generate new temp token
+        $userToken = "TEMPUSER_".CusStFunc::randomStringLower(64);
+
+        $insertUserParams = array(
+            DN::USERS["type"]=>"temp",
+            DN::USERS["token"]=>$userToken,
+            DN::USERS["info"]=>$newUserInfo_str,
+            DN::USERS["phone"]=>'RAN'.rand(11111111,99999999),
+            DN::UA=>Carbon::now()->timestamp,
+            DN::CA=>Carbon::now()->timestamp,
+        );
+
+
+
+        if(DB::table(DN::tables["USERS"])->insert($insertUserParams)){
+            return response(
+                array(
+                    'statusCode'=>200,
+                    'data'=>array(
+                        'token'=> $userToken
+                    )
+                )
+            );
+        }else{
+            return response(["massage"=>"some thing went wrong! try again", "statusCode"=>500],500);
+        }
+    }
+
 
     public function getUserInfo(Request $request){
         $user = DB::table(DN::tables["USERS"])->where(DN::USERS["token"],$request->input("token"))->first();

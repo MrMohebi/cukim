@@ -19,6 +19,7 @@ Route::prefix("/cuki")->group(function (){
         Route::post("/sendOrder",[order::class,"sendOrder"]);
     });
 
+    Route::post("/getTempToken",[user::class,"getTempToken"]);
     Route::post("/sendVCode",[user::class,"sendVCode"]);
     Route::post("/verifyVCode",[user::class,"verifyVCode"]);
     Route::post("/getResData",[resData::class,"getResData"]);
