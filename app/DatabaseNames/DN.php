@@ -39,7 +39,21 @@ class DN
         "resFOODS"=>"foods",
         "resINFO"=>"info",
         'resORDERS'=>"orders",
-        "resPAGERS"=>"pagers"
+        "resPAGERS"=>"pagers",
+        "resCOMMENTS"=>"comments",
+    ];
+
+    const resCOMMENTS = [
+        "phone"=>"phone",
+        "name"=>"name",
+        "trackingId"=>"tracking_id",
+        "foodId"=>"food_id",
+        "title"=>"title",
+        "body"=>"body",
+        "rate"=>"rate",
+        "orderType"=>"order_type",
+        "prosCons"=>"pros_cons",
+        "status"=>"status",
     ];
 
     const resPAGERS = [
