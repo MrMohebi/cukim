@@ -36,6 +36,33 @@ class resData extends Controller
         return response(["data"=>json_decode(self::getResInfo()[DN::resINFO["type"]])]);
     }
 
+    public function getResENameByCode(Request $request){
+        $validator = Validator::make($request->all(),[
+            'resCode'=>"required",
+        ]);
+
+        if($validator->fails())
+            return response(["massage"=>$validator->errors()->all(), "statusCode"=>400],400);
+
+        $resCode =  $request->input("resCode");
+
+        $resEnglishName = DB::table(DN::tables["RESTAURANTS"])->where(DN::RESTAURANTS["code"],$resCode)->value(DN::RESTAURANTS["eName"]);
+
+        if(strlen($resEnglishName) > 2){
+            return response(
+                array(
+                    'statusCode'=>200,
+                    'data'=>array(
+                        'resEnglishName'=> $resEnglishName
+                    )
+                )
+            );
+        }else{
+            return response(array('massage'=>"restaurant not found",'statusCode'=>404), 404);
+        }
+
+    }
+
 
 
     static public function getResInfo():array{
