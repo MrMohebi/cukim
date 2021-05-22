@@ -12,6 +12,7 @@ use App\Http\Controllers\api\cuki\v1\resData;
 use App\Http\Controllers\api\cuki\v1\user;
 use App\Http\Controllers\api\cuki\v1\order;
 use App\Http\Controllers\api\cuki\v1\getIpInfo;
+use App\Http\Controllers\api\cuki\v1\pager;
 
 Route::prefix("/cuki")->group(function (){
     Route::group(["middleware"=>["cukiToken"]], function () {
@@ -20,14 +21,15 @@ Route::prefix("/cuki")->group(function (){
         Route::post("/sendOrder",[order::class,"sendOrder"]);
     });
 
-    Route::get("/getIpInfo",[getIpInfo::class,"getIpInfo"]);
-
+    Route::post("/callPager",[pager::class,"callPager"]);
     Route::post("/getTempToken",[user::class,"getTempToken"]);
     Route::post("/sendVCode",[user::class,"sendVCode"]);
     Route::post("/verifyVCode",[user::class,"verifyVCode"]);
     Route::post("/getResData",[resData::class,"getResData"]);
     Route::post("/getResParts",[resData::class,"getResParts"]);
     Route::post("/getResENameByCode",[resData::class,"getResENameByCode"]);
+    Route::get("/getIpInfo",[getIpInfo::class,"getIpInfo"]);
+
 });
 
 
