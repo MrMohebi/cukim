@@ -38,7 +38,14 @@ class DN
     const resTables = [
         "resFOODS"=>"foods",
         "resINFO"=>"info",
-        'resORDERS'=>"orders"
+        'resORDERS'=>"orders",
+        "resPAGERS"=>"pagers"
+    ];
+
+    const resPAGERS = [
+      "table"=>"table",
+      "status"=>"status",
+      "userPhone"=>"user_phone"
     ];
 
     const resORDERS = [
