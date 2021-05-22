@@ -11,6 +11,7 @@ use App\Http\Controllers\api\res\v1\createCategory;
 use App\Http\Controllers\api\cuki\v1\resData;
 use App\Http\Controllers\api\cuki\v1\user;
 use App\Http\Controllers\api\cuki\v1\order;
+use App\Http\Controllers\api\cuki\v1\getIpInfo;
 
 Route::prefix("/cuki")->group(function (){
     Route::group(["middleware"=>["cukiToken"]], function () {
@@ -18,6 +19,8 @@ Route::prefix("/cuki")->group(function (){
         Route::post("/getUserInfo",[user::class,"getUserInfo"]);
         Route::post("/sendOrder",[order::class,"sendOrder"]);
     });
+
+    Route::get("/getIpInfo",[getIpInfo::class,"getIpInfo"]);
 
     Route::post("/getTempToken",[user::class,"getTempToken"]);
     Route::post("/sendVCode",[user::class,"sendVCode"]);
