@@ -13,12 +13,15 @@ use App\Http\Controllers\api\cuki\v1\user;
 use App\Http\Controllers\api\cuki\v1\order;
 use App\Http\Controllers\api\cuki\v1\getIpInfo;
 use App\Http\Controllers\api\cuki\v1\pager;
+use App\Http\Controllers\api\cuki\v1\comment;
 
 Route::prefix("/cuki")->group(function (){
     Route::group(["middleware"=>["cukiToken"]], function () {
         Route::post("/setUserInfo",[user::class,"setUserInfo"]);
         Route::post("/getUserInfo",[user::class,"getUserInfo"]);
         Route::post("/sendOrder",[order::class,"sendOrder"]);
+        Route::post("/getCommentsByFoodId",[comment::class,"getCommentsByFoodId"]);
+
     });
 
     Route::post("/callPager",[pager::class,"callPager"]);
