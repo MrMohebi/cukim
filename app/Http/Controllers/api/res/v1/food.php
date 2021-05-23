@@ -126,13 +126,14 @@ class food extends Controller
             DN::UA=>time(),
         );
 
+        $changedFields = [];
 
         if(($request->file('foodThumbnail')!= null)){
             if(!self::changeFoodThumbnail($request->input("token"), $foodId, $request->file('foodThumbnail')))
                 return response(["massage"=>"couldn't upload thumbnail", "statusCode"=>500],500);
+            $changedFields[] = 'foodThumbnail';
         }
 
-        $changedFields = [];
         foreach (["foodId", "persianName", "englishName", "group", "details", "price", "status", "discount", "deliveryTime", "counterAppFoodId"] as $eField){
             if(strlen($request->input($eField)) >1)
                 $changedFields[] = $eField;
@@ -149,7 +150,7 @@ class food extends Controller
     static protected function changeFoodThumbnail($token,$foodId, $thumbnail):bool{
         $resEnglishName = DB::table(DN::tables["RESTAURANTS"])->where(DN::RESTAURANTS["token"], $token)->value(DN::RESTAURANTS["eName"]);
         $restaurantFolder = preg_replace('/ /', "_", $resEnglishName);
-        $filePath = "C:".'/var/www/dl.cuki.ir/resimg/'.$restaurantFolder."/foodThumbnail";
+        $filePath = '/var/www/dl.cuki.ir/resimg/'.$restaurantFolder."/foodThumbnail";
 
         self::createPath($filePath);
 
