@@ -6,8 +6,8 @@ use App\Http\Controllers\api\resOwner\v1\signup;
 use App\Http\Controllers\api\resOwner\v1\signin;
 use App\Http\Controllers\api\resOwner\v1\smsRO;
 use App\Http\Controllers\api\admin\v1\login;
-use App\Http\Controllers\api\res\v1\createNewFood;
-use App\Http\Controllers\api\res\v1\createCategory;
+use App\Http\Controllers\api\res\v1\food;
+use App\Http\Controllers\api\res\v1\category;
 use App\Http\Controllers\api\cuki\v1\resData;
 use App\Http\Controllers\api\cuki\v1\user;
 use App\Http\Controllers\api\cuki\v1\order;
@@ -15,6 +15,7 @@ use App\Http\Controllers\api\cuki\v1\getIpInfo;
 use App\Http\Controllers\api\cuki\v1\pager;
 use App\Http\Controllers\api\cuki\v1\comment;
 use App\Http\Controllers\api\cuki\v1\payment;
+use App\Http\Controllers\api\res\v1\resLogin;
 
 Route::prefix("/cuki")->group(function (){
     Route::group(["middleware"=>["cukiToken"]], function () {
@@ -43,9 +44,11 @@ Route::prefix("/cuki")->group(function (){
 
 Route::prefix("/res")->group(function (){
     Route::group(["middleware"=>["resToken"]], function (){
-        Route::post('createCategory',[createCategory::class,'createCategory']);
-        Route::post('createFood',[createNewFood::class,'createNewFood']);
+        Route::post('category',[category::class,'createCategory']);
+        Route::post('createFood',[food::class,'createNewFood']);
     });
+
+    Route::post('login',[resLogin::class,'login']);
 });
 
 
