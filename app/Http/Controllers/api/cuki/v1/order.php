@@ -131,6 +131,37 @@ class order extends Controller
 
     }
 
+    public function getOrderByTrackingId(Request $request){
+        $validator = Validator::make($request->all(),[
+            "resEnglishName"=>"required|min:3",
+            "trackingId"=>"required|min:8"
+        ]);
+
+        if($validator->fails())
+            return response(["massage"=>$validator->errors()->all(), "statusCode"=>400],400);
+
+        $trackingIds =  json_decode($request->input("trackingId"));
+        $trackingIds = is_array($trackingIds) ? $trackingIds : array($trackingIds);
+
+        $user = DB::table(DN::tables["USERS"])->where(DN::USERS["token"], $request->input("token"));
+
+        $ordersInfo = json_decode(json_encode(DB::connection("resConn")
+            ->table(DN::resTables["resORDERS"])
+            ->where(DN::resORDERS["userPhone"], $user->value(DN::USERS["phone"]))
+            ->whereIn(DN::resORDERS["trackingId"], $trackingIds)
+            ->get()),true);
+
+
+        if (sizeof($ordersInfo) == 1) {
+            return response(array('statusCode'=>200, 'data'=>CusStFunc::arrayKeysToCamel($ordersInfo[0])));
+        }else if(sizeof($ordersInfo) > 1){
+            return response(array('statusCode'=>200, 'data'=>CusStFunc::arrayKeysToCamel($ordersInfo)));
+        }else{
+            return response(["massage"=>"nothing found", "statusCode"=>404],404);
+        }
+
+    }
+
 
 
 
