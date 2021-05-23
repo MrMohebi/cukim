@@ -14,6 +14,29 @@ class DN
         "FOOD_GROUPS"=>"food_groups",
         "RESTAURANTS"=>"restaurants",
         "USERS"=>"users",
+        "PAYMENTS"=>"payments",
+    ];
+
+    const PAYMENTS = [
+        "trackingId"=>"tracking_id",
+        "amount"=>"amount",
+        "status"=>"status",
+        "item"=>"item",
+        "itemType"=>"item_type",
+        'paymentId'=>"payment_id",
+        "paymentKey"=>"payment_key",
+        "paymentCode"=>"payment_code",
+        "paymentGroup"=>"payment_group",
+        "paymentNum"=>"payment_num",
+        "ipg"=>"ipg",
+        "details"=>"details",
+        "payerPhone"=>"payer_phone",
+        "payerName"=>"payer_name",
+        "payerCard"=>"payer_card",
+        "payerCardHash"=>"payer_card_hash",
+        "paypingCode"=>"payping_code",
+        "paidAt"=>"paid_at",
+        "verifiedAt"=>"verified_at"
     ];
 
     const USERS = [
