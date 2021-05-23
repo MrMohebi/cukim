@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\DatabaseNames\DN;
 
-class createCategory extends Controller
+class category extends Controller
 {
     function createCategory(Request $request)
     {
