@@ -14,6 +14,7 @@ use App\Http\Controllers\api\cuki\v1\order;
 use App\Http\Controllers\api\cuki\v1\getIpInfo;
 use App\Http\Controllers\api\cuki\v1\pager;
 use App\Http\Controllers\api\cuki\v1\comment;
+use App\Http\Controllers\api\cuki\v1\payment;
 
 Route::prefix("/cuki")->group(function (){
     Route::group(["middleware"=>["cukiToken"]], function () {
@@ -24,6 +25,7 @@ Route::prefix("/cuki")->group(function (){
         Route::post("/getOrderByTrackingId",[order::class,"getOrderByTrackingId"]);
         Route::post("/getCommentsByFoodId",[comment::class,"getCommentsByFoodId"]);
         Route::post("/sendComment",[comment::class,"sendComment"]);
+        Route::post("/getPaymentByTrackingId",[payment::class,"getPaymentByTrackingId"]);
     });
 
     Route::post("/callPager",[pager::class,"callPager"]);
