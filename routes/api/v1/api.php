@@ -20,9 +20,9 @@ Route::prefix("/cuki")->group(function (){
         Route::post("/setUserInfo",[user::class,"setUserInfo"]);
         Route::post("/getUserInfo",[user::class,"getUserInfo"]);
         Route::post("/sendOrder",[order::class,"sendOrder"]);
+        Route::post("/getOpenOrders",[order::class,"getOpenOrders"]);
         Route::post("/getCommentsByFoodId",[comment::class,"getCommentsByFoodId"]);
         Route::post("/sendComment",[comment::class,"sendComment"]);
-
     });
 
     Route::post("/callPager",[pager::class,"callPager"]);

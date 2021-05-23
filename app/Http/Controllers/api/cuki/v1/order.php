@@ -101,6 +101,38 @@ class order extends Controller
 
     }
 
+    public function getOpenOrders(Request $request){
+        $validator = Validator::make($request->all(),[
+            "resEnglishName"=>"required|min:3"
+        ]);
+
+        if($validator->fails())
+            return response(["massage"=>$validator->errors()->all(), "statusCode"=>400],400);
+
+        $user = DB::table(DN::tables["USERS"])->where(DN::USERS["token"], $request->input("token"));
+
+        $openOrdersList = json_decode(json_encode(DB::connection("resConn")
+            ->table(DN::resTables["resORDERS"])
+            ->where([
+                [DN::resORDERS["userPhone"], $user->value(DN::USERS["phone"])],
+                [DN::resORDERS["status"], "!=", "deleted"],
+                [DN::resORDERS["status"], "!=", "done"]
+            ])
+            ->get()), true);
+
+
+        if(sizeof($openOrdersList) > 0){
+            if (isset($openOrdersList['id']))
+                $openOrdersList = array($openOrdersList);
+            return response(array('statusCode'=>200, 'data'=>CusStFunc::arrayKeysToCamel($openOrdersList)));
+        }else{
+            return response(["massage"=>"nothing found", "statusCode"=>404],404);
+        }
+
+    }
+
+
+
 
     private static function getFoodInfo(array $foods_list):array{
         $orderedFood = array();
