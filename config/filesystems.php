@@ -30,6 +30,11 @@ return [
 
     'disks' => [
 
+        'resImg' => [
+            'driver' => 'local',
+            'root' => "/var/www/dl.cuki.ir/resImg",
+        ],
+
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
