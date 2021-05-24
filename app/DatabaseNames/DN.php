@@ -64,6 +64,17 @@ class DN
         'resORDERS'=>"orders",
         "resPAGERS"=>"pagers",
         "resCOMMENTS"=>"comments",
+        "resCUSTOMERS"=>"customers",
+    ];
+
+    const resCUSTOMERS = [
+        "phone"=>"phone",
+        "orderTimes"=>"order_times",
+        "orderList"=>"order_list",
+        "score"=>"score",
+        "tOrderedPrice"=>"total_order_price",
+        "rank"=>"rank",
+        "offCodes"=>"off_codes",
     ];
 
     const resCOMMENTS = [
