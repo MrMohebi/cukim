@@ -44,7 +44,7 @@ Route::prefix("/cuki")->group(function (){
 
 Route::prefix("/res")->group(function (){
     Route::group(["middleware"=>["resToken"]], function (){
-        Route::post('category',[category::class,'createCategory']);
+        Route::post('createCategory',[category::class,'createCategory']);
         Route::post('createFood',[food::class,'createNewFood']);
         Route::post('changeFoodInfo',[food::class,'changeFoodInfo']);
     });
