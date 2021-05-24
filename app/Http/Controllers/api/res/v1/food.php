@@ -19,13 +19,13 @@ class food extends Controller{
 
 
     function createNewFood(Request $request){
-        $validatedData = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             "persianName" => "required",
             "group" => "required",
         ]);
 
-        if ($validatedData->fails())
-            return response(array( 'message' => "wrong inputs!",'statusCode' => 400),400);
+        if ($validator->fails())
+            return response(array( 'message' => $validator->errors()->all(),'statusCode' => 400),400);
 
 
         $persianName = trim($request->input('persianName') ?? "");
