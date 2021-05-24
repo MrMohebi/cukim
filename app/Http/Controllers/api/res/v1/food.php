@@ -11,8 +11,13 @@ use App\DatabaseNames\DN;
 use Intervention\Image\Facades\Image;
 
 
-class food extends Controller
-{
+class food extends Controller{
+
+    const resIMGPath = '/var/www/dl.cuki.ir/resimg/';
+    const dlURL = "https://dl.cuki.ir/";
+
+
+
     function createNewFood(Request $request){
         $validatedData = Validator::make($request->all(), [
             "persianName" => "required",
@@ -150,7 +155,7 @@ class food extends Controller
     static protected function changeFoodThumbnail($token,$foodId, $thumbnail):bool{
         $resEnglishName = DB::table(DN::tables["RESTAURANTS"])->where(DN::RESTAURANTS["token"], $token)->value(DN::RESTAURANTS["eName"]);
         $restaurantFolder = preg_replace('/ /', "_", $resEnglishName);
-        $filePath = '/var/www/dl.cuki.ir/resimg/'.$restaurantFolder."/foodThumbnail";
+        $filePath = self::resIMGPath.$restaurantFolder."/foodThumbnail";
 
         self::createPath($filePath);
 
@@ -160,7 +165,7 @@ class food extends Controller
             $const->aspectRatio();
         })->save($filePath.'/'.$newFileName);
 
-        $thumbnailUrl = "https://dl.cuki.ir/resimg/".$restaurantFolder."/foodThumbnail/".$newFileName;
+        $thumbnailUrl = self::dlURL."resimg/".$restaurantFolder."/foodThumbnail/".$newFileName;
 
 
         return DB::connection("resConn")->table(DN::resTables["resFOODS"])->where("id",$foodId)->update([DN::resFOODS["thumbnail"]=>$thumbnailUrl]);
