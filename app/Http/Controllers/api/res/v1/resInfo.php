@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\res\v1;
 
+use App\CustomFunctions\CusStFunc;
 use App\DatabaseNames\DN;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -59,5 +60,11 @@ class resInfo extends Controller
             return response(["massage"=>"something went wrong during change food info on server", "statusCode"=>500],500);
         }
 
+    }
+
+    public function getResInfo(){
+        $resInfo = DB::connection("resConn")->table(DN::resTables["resINFO"]);
+
+        return response(array('statusCode'=>200, 'data'=>$resInfo ? CusStFunc::arrayKeysToCamel(json_decode(json_encode($resInfo->get()),true)) : array()));
     }
 }

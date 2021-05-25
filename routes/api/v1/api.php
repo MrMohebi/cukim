@@ -57,6 +57,7 @@ Route::prefix("/res")->group(function (){
         Route::post('getFoodList',[food::class,'getFoodList']);
         Route::post('getOrderList',[resOrder::class,'getOrderList']);
         Route::post('getPagerList',[resPager::class,'getPagers']);
+        Route::post('getResInfo',[resInfo::class,'getResInfo']);
     });
 
     Route::post('login',[resLogin::class,'login']);
