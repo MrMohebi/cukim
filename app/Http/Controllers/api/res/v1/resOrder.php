@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\res\v1;
 
+use App\CustomFunctions\CusStFunc;
 use App\DatabaseNames\DN;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -71,6 +72,27 @@ class resOrder extends Controller
         }else{
             return response(array( 'message' => "new order status is like its previous one",'statusCode' => 400),400);
         }
+    }
+
+    public function getOrderList(Request $request){
+        $validator = Validator::make($request->all(), [
+            "startDate" => "required|numeric",
+        ]);
+
+        if ($validator->fails())
+            return response(array( 'message' => $validator->errors()->all(),'statusCode' => 400),400);
+
+        $startDate = $request->input("startDate");
+        $endDate = $request->input("endDate") ?? time();
+
+        // check dates are correct
+        if($startDate > $endDate)
+            return response(array( 'message' => "input dates are incorrect",'statusCode' => 400),400);
+
+
+        $ordersList = DB::connection("resConn")->table(DN::resTables["resORDERS"])->whereBetween(DN::CA, [$startDate, $endDate]);
+
+        return response(array('statusCode'=>200, 'data'=>$ordersList ? CusStFunc::arrayKeysToCamel(json_decode(json_encode($ordersList->get()),true)) : array()));
     }
 
 
