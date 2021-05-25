@@ -52,6 +52,7 @@ Route::prefix("/res")->group(function (){
         Route::post('changeOrderStatus',[resOrder::class,'changeOrderStatus']);
         Route::post('changeResInfo',[resInfo::class,'changeResInfo']);
         Route::post('changePassword',[resLogin::class,'changePassword']);
+        Route::post('getCategoryList',[category::class,'getCategoryList']);
     });
 
     Route::post('login',[resLogin::class,'login']);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\res\v1;
 
+use App\CustomFunctions\CusStFunc;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -21,7 +22,6 @@ class category extends Controller
             return response(array( 'message' => $validator->errors()->all(),'statusCode' => 400),400);
 
 
-
         $catPersianName = $request->input('catPersianName');
         $catEnglishName = $request->input('catEnglishName');
         $logo = $request->input('logo') ?? "";
@@ -29,7 +29,6 @@ class category extends Controller
         $type = $request->input('type') ?? "";
         $resEnglishName = $request->input('resEnglishName') ?? "";
         $averageColor = $request->input('averageColor') ?? "";
-
 
         if (
             DB::table(DN::tables["FOOD_GROUPS"])->where(DN::FOOD_GROUPS['pName'], $catPersianName)->exists() &&
@@ -58,6 +57,14 @@ class category extends Controller
             return response(["message" => "some thing went wrong during creating new category on server", 'statusCode' => 500], 500);
         }
 
+    }
+
+    public function getCategoryList(Request $request){
+        $resEnglishName = DB::table(DN::tables["RESTAURANTS"])->where(DN::RESTAURANTS["token"], $request->input("token"))->value(DN::RESTAURANTS["eName"]);
+
+        $catsList = DB::table(DN::tables["FOOD_GROUPS"])->where(DN::FOOD_GROUPS['resEName'], $resEnglishName)->orWhere(DN::FOOD_GROUPS['resEName'], 'general');
+
+        return response(array('statusCode'=>200, 'data'=>$catsList ? CusStFunc::arrayKeysToCamel(json_decode(json_encode($catsList->get()),true)) : array()));
     }
 
 }
