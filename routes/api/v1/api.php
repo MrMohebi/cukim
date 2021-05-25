@@ -18,6 +18,7 @@ use App\Http\Controllers\api\res\v1\resOrder;
 use App\Http\Controllers\api\res\v1\food;
 use App\Http\Controllers\api\res\v1\category;
 use App\Http\Controllers\api\res\v1\resInfo;
+use App\Http\Controllers\api\res\v1\resPager;
 
 Route::prefix("/cuki")->group(function (){
     Route::group(["middleware"=>["cukiToken"]], function () {
@@ -55,6 +56,7 @@ Route::prefix("/res")->group(function (){
         Route::post('getCategoryList',[category::class,'getCategoryList']);
         Route::post('getFoodList',[food::class,'getFoodList']);
         Route::post('getOrderList',[resOrder::class,'getOrderList']);
+        Route::post('getPagersList',[resPager::class,'getPagers']);
     });
 
     Route::post('login',[resLogin::class,'login']);
