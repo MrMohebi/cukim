@@ -151,6 +151,12 @@ class food extends Controller{
         }
     }
 
+    public function getFoodList (){
+        $foodsList = DB::connection("resConn")->table(DN::resTables["resFOODS"]);
+        return response(array('statusCode'=>200, 'data'=>$foodsList ? CusStFunc::arrayKeysToCamel(json_decode(json_encode($foodsList->get()),true)) : array()));
+
+    }
+
 
     static protected function changeFoodThumbnail($token,$foodId, $thumbnail):bool{
         $resEnglishName = DB::table(DN::tables["RESTAURANTS"])->where(DN::RESTAURANTS["token"], $token)->value(DN::RESTAURANTS["eName"]);
