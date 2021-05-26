@@ -191,4 +191,43 @@ class user extends Controller
         return response(["data"=>CusStFunc::arrayKeysToCamel(json_decode(json_encode($user))),"statusCode"=>200]);
     }
 
+    public function getCustomerInfo(Request $request){
+        $validator = Validator::make($request->all(),[
+            'resEnglishName'=>"required|min:3",
+        ]);
+
+        if($validator->fails())
+            return response(["massage"=>$validator->errors()->all(), "statusCode"=>400],400);
+
+
+        $user = DB::table(DN::tables["USERS"])->where(DN::USERS["token"], $request->input("token"));
+        $userPhone = $user->value(DN::USERS["phone"]);
+        $customerInfo = DB::connection("resConn")
+            ->table(DN::resTables["resCUSTOMERS"])
+            ->where(DN::resCUSTOMERS["phone"],$userPhone);
+
+        $ordersListInfo = DB::connection("resConn")
+            ->table(DN::resTables["resORDERS"])
+            ->where(DN::resORDERS["userPhone"],$userPhone)
+            ->orderByDesc(DN::CA)
+            ->limit(40);
+
+        if($customerInfo->exists()){
+            $customerInfo = $customerInfo->first();
+            $customerInfo_arranged = array(
+                'phone'=> $customerInfo->{DN::resCUSTOMERS["phone"]},
+                'totalBought'=> $customerInfo->{DN::resCUSTOMERS["tOrderedPrice"]},
+                'orderTimes'=> $customerInfo->{DN::resCUSTOMERS["orderTimes"]},
+                'score'=> $customerInfo->{DN::resCUSTOMERS["score"]},
+                'orderList'=> json_decode(json_encode($ordersListInfo->get()), true),
+                'rank'=> $customerInfo->{DN::resCUSTOMERS["rank"]},
+                'lastOrderDate'=> $customerInfo->{DN::UA},
+            );
+            return response(array('statusCode'=>200, 'data'=>CusStFunc::arrayKeysToCamel($customerInfo_arranged)));
+        }else{
+            return response(["massage"=>"customer didn't find OR didn't order anything from here yet", "statusCode"=>404],404);
+        }
+
+    }
+
 }

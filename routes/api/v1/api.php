@@ -24,6 +24,7 @@ Route::prefix("/cuki")->group(function (){
     Route::group(["middleware"=>["cukiToken"]], function () {
         Route::post("/setUserInfo",[user::class,"setUserInfo"]);
         Route::post("/getUserInfo",[user::class,"getUserInfo"]);
+        Route::post("/getCustomerInfo",[user::class,"getCustomerInfo"]);
         Route::post("/sendOrder",[order::class,"sendOrder"]);
         Route::post("/getOpenOrders",[order::class,"getOpenOrders"]);
         Route::post("/getOrderByTrackingId",[order::class,"getOrderByTrackingId"]);
