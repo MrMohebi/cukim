@@ -100,8 +100,9 @@ class resData extends Controller
                 "averageColor"=>$group->{DN::FOOD_GROUPS["averageColor"]},
                 "type"=>$group->{DN::FOOD_GROUPS["type"]},
             );
-            $foodsList[$i]->{DN::resFOODS["group"]} = $groupInfo;
+            $foodsList[$i]->{DN::resFOODS["group"]} = (object)$groupInfo;
         }
+        print_r(json_decode(json_encode($foodsList),true));
         return CusStFunc::arrayKeysToCamel(json_decode(json_encode($foodsList),true));
     }
 }

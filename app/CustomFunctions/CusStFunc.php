@@ -32,31 +32,11 @@ class CusStFunc
             return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UTF-16BE');
         }, $persianStr);
     }
-
     public static function arrayKeysToCamel($array):array{
         $result = array();
         foreach ($array as $key=> $val){
             if(is_array($val)){
-                $result_t1 =array();
-                foreach ($val as $key1=> $val1){
-                    if(is_array($val1)){
-                        $result_t2 =array();
-                        foreach ($val1 as $key2=> $val2){
-                            if(is_array($val2)){
-                                $result_t3 =array();
-                                foreach ($val2 as $key3=> $val3){
-
-                                    $result_t2[Str::camel($key3)] = $val3;
-                                }
-                                $val2 = $result_t3;
-                            }
-                            $result_t3[Str::camel($key2)] = $val2;
-                        }
-                        $val1 = $result_t2;
-                    }
-                    $result_t1[Str::camel($key1)] = $val1;
-                }
-                $val = $result_t1;
+                $val = self::arrayKeysToCamel($val);
             }
             $result[Str::camel($key)] = $val;
         }
