@@ -28,11 +28,11 @@ Route::prefix("/cuki")->group(function (){
         Route::post("/sendOrder",[order::class,"sendOrder"]);
         Route::post("/getOpenOrders",[order::class,"getOpenOrders"]);
         Route::post("/getOrderByTrackingId",[order::class,"getOrderByTrackingId"]);
-        Route::post("/getCommentsByFoodId",[comment::class,"getCommentsByFoodId"]);
         Route::post("/sendComment",[comment::class,"sendComment"]);
         Route::post("/getPaymentByTrackingId",[payment::class,"getPaymentByTrackingId"]);
     });
 
+    Route::post("/getCommentsByFoodId",[comment::class,"getCommentsByFoodId"]);
     Route::post("/callPager",[pager::class,"callPager"]);
     Route::post("/getTempToken",[user::class,"getTempToken"]);
     Route::post("/sendVCode",[user::class,"sendVCode"]);

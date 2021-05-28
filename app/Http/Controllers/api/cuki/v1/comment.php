@@ -49,7 +49,6 @@ class comment extends Controller
         if(isset($commentsList->id))
             $commentsList = array($commentsList);
 
-
         if(count($commentsList) > 0 && $commentsList){
             // remove privet info
             $finalCommentsList = array();
@@ -67,7 +66,7 @@ class comment extends Controller
                 )
             ));
         }else{
-            return response(["massage"=>"nothing found", "statusCode"=>404],404);
+            return response(["massage"=>"nothing found", "data"=>['isAllowedLeaveComment'=> $trackingIdAndOrders[0] > 100], "statusCode"=>404],200);
         }
     }
 
