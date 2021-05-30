@@ -3,6 +3,7 @@
 
 namespace App\CustomClasses\Ipg;
 use App\CustomClasses\AbstractClasses\Ipg;
+use App\DatabaseNames\DN;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
@@ -20,20 +21,19 @@ class Payping extends Ipg{
 
     static public function createPaymentLink(string $resEnglishName, string $userToken, string $trackingId, int $amount, string $itemType, array $items):array{
         $resData = DB::table("restaurants")
-            ->where('english_name', $resEnglishName)
-            ->first();
+            ->where('english_name', $resEnglishName);
 
 
         // check user is valid and get it's phone and name
-        $userInfo = DB::table("users")->where("token", $userToken)->first();
-        $costumer_phone = $userInfo['phone'];
-        $costumer_name = $userInfo['name'];
+        $userInfo = DB::table("users")->where("token", $userToken);
+        $costumer_phone = $userInfo->value(DN::USERS["phone"]);
+        $costumer_name = $userInfo->value(DN::USERS["name"]);
         if(strlen($costumer_phone) != 11)
             return array('statusCode' => 401, "massage" => "user is not valid");
 
 
         // check restaurant is correct
-        if (strlen($resData['payment_key']) < 2)
+        if (strlen($resData->value(DN::RESTAURANTS["paymentKey"])) < 2)
             return array('statusCode' => 400, "massage" => "restaurant wasn't found");
 
 
@@ -53,17 +53,22 @@ class Payping extends Ipg{
         $paymentLastNum = $previousPaidInfo['paymentLastNum'];
 
         $paymentNum = (($paymentLastNum > 0) ? ($paymentLastNum+1) : 1 );
-        $paymentBaseId = (strlen($previousPaidInfo['paymentBaseId']) > 5) ? $previousPaidInfo['paymentBaseId'] : ("cuki".$paymentIdType."-".$resData["payment_key"] ."-".CusStFunc::randomStringLower(4));
+        $paymentBaseId = (strlen($previousPaidInfo['paymentBaseId']) > 5) ?
+            $previousPaidInfo['paymentBaseId'] :
+            ("cuki".$paymentIdType."-".$resData->value(DN::RESTAURANTS["paymentKey"]) ."-".CusStFunc::randomStringLower(4));
 
         $paymentId = $paymentBaseId ."-". $paymentNum;
 
+        $api_key = $resData->value(DN::RESTAURANTS["ipgToken"]);
+
+
         // for test:
-        if($resData["english_name"] == "cuki"){
+        if($resData->value(DN::RESTAURANTS["eName"]) == "cuki"){
             $amount = 1000;
+            $api_key = "06b31901f67541d49531245358d48a10ab083854933dde5e0c6da705fdf1c742";
         }
 
 
-        $api_key = $resData['ipg_token'];
 
         $info_params = array(
             "amount" => $amount,
@@ -75,8 +80,7 @@ class Payping extends Ipg{
         );
 
 
-        $result = Http::withToken($api_key)->post(self::$URLCreatePayment,$info_params);
-
+        $result = Http::withToken($api_key)->post(self::$URLCreatePayment,$info_params)->json();
         $payPingCode = $result['code'];
 
         $sqlInsert_createPaymentParams = array(
@@ -85,19 +89,19 @@ class Payping extends Ipg{
             'payment_id'=>$paymentId,
             'payment_group'=>$paymentBaseId,
             'payment_num'=>$paymentNum,
-            'payment_key'=>$resData["payment_key"],
+            'payment_key'=>$resData->value(DN::RESTAURANTS["paymentKey"]),
             'item_type'=>$itemType,
-            'item'=>$items,
+            'item'=>json_encode($items),
             'payer_phone'=>$costumer_phone,
             'payer_name'=>$costumer_name,
             'amount'=>$amount,
-            'status'=>'0',
+            'status'=>'0'
         );
 
 
-        if(DB::table("payments")->insert($sqlInsert_createPaymentParams)){
+        if(DB::table(DN::tables["PAYMENTS"])->insert($sqlInsert_createPaymentParams)){
             if(strlen($payPingCode) > 2){
-                if(DB::table("payments")->where("payment_id",$paymentId)->update(array('payping_code'=>$payPingCode))){
+                if(DB::table(DN::tables["PAYMENTS"])->where(DN::PAYMENTS["paymentId"],$paymentId)->update(array(DN::PAYMENTS["paypingCode"]=>$payPingCode))){
                     return array(
                         'statusCode'=>200,
                         "data"=>array(
@@ -303,18 +307,18 @@ class Payping extends Ipg{
     protected static function getFoodInfo($foods_list):array{
         $orderedFood = array();
 
-        $all_foods = DB::connection("resConn")->table("foods")->get();
+        $all_foods = json_decode(json_encode(DB::connection("resConn")->table(DN::resTables["resFOODS"])->get()),true);
 
         foreach ($foods_list as $eachOrderedFood){
             foreach ($all_foods as $eachFood){
                 if ($eachOrderedFood['id'] == $eachFood['id']) {
-                    $priceAfterDiscount = $eachFood['price'] * ((100 - $eachFood['discount'])/100);
+                    $priceAfterDiscount = $eachFood[DN::resFOODS["price"]] * ((100 - $eachFood[DN::resFOODS["discount"]])/100);
                     $eachOrderedFood_newArray = array(
                         'id'=>$eachOrderedFood['id'],
-                        'name'=>$eachFood['name'],
+                        'persianName'=>$eachFood[DN::resFOODS["pName"]],
                         'number'=>$eachOrderedFood['number'],
-                        'price'=>$eachFood['price'],
-                        'discount'=>$eachFood['discount'],
+                        'price'=>$eachFood[DN::resFOODS["price"]],
+                        'discount'=>$eachFood[DN::resFOODS["discount"]],
                         'priceAfterDiscount'=>$priceAfterDiscount
                     );
                     array_push($orderedFood, $eachOrderedFood_newArray);
@@ -325,27 +329,36 @@ class Payping extends Ipg{
     }
 
     protected static function getPreviousPaidInfo($trackingId):array{
-        $payments = DB::table("payments")->where('tracking_id',$trackingId);
-        $lastPaymentNum = $payments->max('payment_num');
-        $paymentBaseId = $payments->first()->value('payment_group');
-        $paidSum = $payments->where('verified_at', ">", "100")->sum('amount');
-
-
+        $payments = DB::table("payments")->where(DN::PAYMENTS["trackingId"],$trackingId);
         // get order info
         $orderInfo = DB::connection("resConn")
-            ->table("orders")
-            ->where('tracking_id', $trackingId)
-            ->first();
+            ->table(DN::resTables["resORDERS"])
+            ->where(DN::resORDERS["trackingId"], $trackingId);
+
+        if(!$payments->exists()){
+            return array(
+                "wasPaidTotal"=>false,
+                "paidSum"=>0,
+                "totalPrice"=>$orderInfo->value(DN::resORDERS["tPrice"]) ?? 999999999,
+                'paymentBaseId'=>"",
+                'paymentLastNum'=>0
+            );
+        }
+
+        $lastPaymentNum = $payments->max(DN::PAYMENTS["paymentNum"]);
+        $paymentBaseId = $payments->first()->value(DN::PAYMENTS["paymentGroup"]);
+        $paidSum = $payments->where(DN::PAYMENTS["verifiedAt"], ">", "100")->sum(DN::PAYMENTS["amount"]);
+
 
         // check if order was paid dont open new payment
         $wasPaidTotal = false;
-        if($orderInfo['total_price'] <= $paidSum)
+        if($orderInfo->value(DN::resORDERS["tPrice"]) <= $paidSum)
             $wasPaidTotal = true;
 
         return array(
             "wasPaidTotal"=>$wasPaidTotal,
             "paidSum"=>$paidSum,
-            "totalPrice"=>$orderInfo['total_price'],
+            "totalPrice"=>$orderInfo->value(DN::resORDERS["tPrice"]),
             'paymentBaseId'=>$paymentBaseId,
             'paymentLastNum'=>$lastPaymentNum
         );

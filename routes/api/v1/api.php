@@ -19,6 +19,7 @@ use App\Http\Controllers\api\res\v1\food;
 use App\Http\Controllers\api\res\v1\category;
 use App\Http\Controllers\api\res\v1\resInfo;
 use App\Http\Controllers\api\res\v1\resPager;
+use App\Http\Controllers\api\pay\v1\createLink;
 
 Route::prefix("/cuki")->group(function (){
     Route::group(["middleware"=>["cukiToken"]], function () {
@@ -91,5 +92,7 @@ Route::prefix("/qr")->group(function (){
 
 
 Route::prefix("/pay")->group(function (){
-
+    Route::group(["middleware"=>["cukiToken"]], function () {
+        Route::post("/createLink",[createLink::class,"createLink"]);
+    });
 });
