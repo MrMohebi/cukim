@@ -20,6 +20,7 @@ use App\Http\Controllers\api\res\v1\category;
 use App\Http\Controllers\api\res\v1\resInfo;
 use App\Http\Controllers\api\res\v1\resPager;
 use App\Http\Controllers\api\pay\v1\createLink;
+use App\Http\Controllers\api\pay\v1\verifyPayment;
 
 Route::prefix("/cuki")->group(function (){
     Route::group(["middleware"=>["cukiToken"]], function () {
@@ -95,4 +96,6 @@ Route::prefix("/pay")->group(function (){
     Route::group(["middleware"=>["cukiToken"]], function () {
         Route::post("/createLink",[createLink::class,"createLink"]);
     });
+    Route::post("/verify",[verifyPayment::class,"verify"]);
+    Route::get("/status",[verifyPayment::class,"payStatus"]);
 });

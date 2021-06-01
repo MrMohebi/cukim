@@ -18,7 +18,7 @@ abstract class Ipg
         string $code,
         string $refid,
         string $clientrefid,
-        string $cardnumber,
-        string $cardhashpan
+        ?string $cardnumber,
+        ?string $cardhashpan
     ):array;
 }
