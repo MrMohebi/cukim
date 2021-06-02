@@ -97,5 +97,4 @@ Route::prefix("/pay")->group(function (){
         Route::post("/createLink",[createLink::class,"createLink"]);
     });
     Route::post("/verify",[verifyPayment::class,"verify"]);
-    Route::get("/status",[verifyPayment::class,"payStatus"]);
 });

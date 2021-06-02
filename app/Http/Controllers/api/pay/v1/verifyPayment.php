@@ -37,14 +37,10 @@ class verifyPayment extends Controller
         switch ($res->value(DN::RESTAURANTS["ipgName"])){
             case "payping":
                 $linkData = Payping::verifyPayment($code, $refid, $clientrefid, $cardnumber, $cardhashpan);
-                return response($linkData);
-//                return redirect($linkData["url"]) :;
+                return redirect($linkData["url"]) ;
         }
 
         return response($linkData);
     }
 
-    public function payStatus(Request $request){
-        return response($request->all());
-    }
 }

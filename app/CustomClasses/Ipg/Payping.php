@@ -15,7 +15,7 @@ class Payping extends Ipg{
     protected static $URLPaymentLinkBase = "https://api.payping.ir/v2/pay/gotoipg/";
     protected static $URLVerifyPayment = "https://api.payping.ir/v2/pay/verify";
     protected static $URLReturnIPG = "https://api.cukim.ir/api/v1/pay/verify";
-    protected static $URLPaymentResult = "https://api.cukim.ir/api/v1/pay/status";
+    protected static $URLPaymentResult = "http://paystatus.cukim.ir/";
 
 
 
