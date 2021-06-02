@@ -50,7 +50,7 @@ class payment extends Controller
             return response(array('statusCode'=>200, "data"=>$result));
 
         }else{
-            return response(["massage"=>"no payment was found!", "statusCode"=>404],404);
+            return response(["massage"=>"no payment was found!", "statusCode"=>404],200);
         }
 
     }
