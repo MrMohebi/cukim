@@ -5,6 +5,7 @@
 >   - [res](#res-api)
 >   - [resOwner](#resowner-api)
 >   - [admin](#admin-api)
+>   - [pay](#pay-api)
 
 
 
@@ -313,6 +314,14 @@
 
 
 
+<hr>
+
+## Pay API
+| address | Description  |
+| --- |---   |
+|      |      |
+
+
 
 
 <hr>
@@ -320,9 +329,33 @@
 ## Res API
 | address | Description  |
 | --- |---   |
-|      |      |
+| [createLink](#paycreatelink-post) | register a new res owner |
 
 
+
+> ### ```/pay/createLink``` ```POST```
+>
+> #### Required fields:
+>   - **resEnglishName**
+>   - **token**
+>   - **trackingId**
+>   - **amount**
+>   - **itemType**
+>   - **items**
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": {
+>        "url": "https://xxx.xyz",
+>        "amount": 100000,
+>        "paymentId": "cukiX-XX-XXXX-X",
+>        "totalPaid": "400000",
+>        "totalPrice": 7000000
+>     }
+>   }
+>   ```
 
 
 
