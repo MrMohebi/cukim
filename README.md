@@ -316,17 +316,270 @@
 
 <hr>
 
-## Pay API
+## Res API
 | address | Description  |
 | --- |---   |
-|      |      |
+| [login](#reslogin-post) |  |
+| [createCategory](#rescreatecategory-post) | |
+| [createFood](#rescreatefood-post) | |
+| [changeFoodInfo](#reschangefoodinfo-post) |  |
+| [createFood](#rescreatefood-post) |  |
+| [changeOrderStatus](#reschangeorderstatus-post) |  |
+| [changeResInfo](#reschangeresinfo-post) |  |
+| [changePassword](#reschangepassword-post) |  |
+| [getCategoryList](#resgetcategorylist-post) |  |
+| [getFoodList](#resgetfoodlist-post) |  |
+| [getOrderList](#resgetorderlist-post) |  |
+| [getPagerList](#resgetpagerlist-post) |  |
+| [getResInfo](#resgetresinfo-post) |  |
 
+
+
+> ### ```/res/login``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>   - **username**
+>   - **password**
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": {
+>         "token": "",
+>         "position": "",
+>         "username": "",
+>         "persianName": "",
+>         "englishName": "",
+>         "permissions": "",
+>         "ipgName": ""
+>     }
+>   }
+>   ```
+
+
+
+
+
+
+
+> ### ```/res/createCategory``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>   - **catPersianName**
+>   - **catEnglishName**
+>   - logo
+>   - type
+>   - rank
+>   - averageColor
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]"
+>   }
+>   ```
+
+
+
+> ### ```/res/createFood``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>   - **persianName**
+>   - **group**
+>   - englishName
+>   - details
+>   - price
+>   - status
+>   - deliveryTime
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]"
+>   }
+>   ```
+
+
+
+> ### ```/res/changeFoodInfo``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>   - **foodId**
+>   - persianName
+>   - englishName
+>   - group
+>   - details  [split by "+"]
+>   - price
+>   - status ["outOfStock", "inStock", "deleted"]
+>   - discount
+>   - deliveryTime
+>   - counterAppFoodId
+>   - foodThumbnail  [img file]
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": {
+>         "changedFields": [] 
+>     }
+>   }
+>   ``` 
+
+
+
+> ### ```/res/changeOrderStatus``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>   - **status**
+>   - **deleteReason**
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": {
+>         "trackingId": "",
+>         "newStatus": "" 
+>     }
+>   }
+>   ``` 
+
+
+
+> ### ```/res/changeResInfo``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>   - persianName
+>   - englishName
+>   - status  ["open", "closed"]
+>   - counterPhone
+>   - phone
+>   - addressText
+>   - addressLink
+>   - owner
+>   - employers
+>   - socialLinks
+>   - openTime
+>   - type
+>   - minOrderPrice
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": {
+>         "changedFields": [] 
+>     }
+>   }
+>   ``` 
+
+
+
+
+> ### ```/res/changePassword``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>   - **password**
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]"
+>   }
+>   ```
+
+
+
+
+> ### ```/res/getCategoryList``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": {}
+>   }
+>   ```
+
+
+> ### ```/res/getFoodList``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": {}
+>   }
+>   ```
+
+
+
+> ### ```/res/getOrderList``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>   - **startDate**
+>   - endDate [default now]
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": {}
+>   }
+>   ```
+
+
+
+> ### ```/res/getPagerList``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": {}
+>   }
+>   ```
+
+
+
+
+> ### ```/res/getResInfo``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": {}
+>   }
+>   ```
 
 
 
 <hr>
 
-## Res API
+## Pay API
 | address | Description  |
 | --- |---   |
 | [createLink](#paycreatelink-post) | register a new res owner |
