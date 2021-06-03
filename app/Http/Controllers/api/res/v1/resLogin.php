@@ -40,10 +40,10 @@ class resLogin extends Controller
                 ]);
 
             } else {
-                return response(['message' => "username or password are wrong", 'statusCode' => 401,], 401);
+                return response(['message' => "username or password are wrong", 'statusCode' => 401,], 200);
             }
         } else {
-            return response(['message' => "username or password are wrong", 'statusCode' => 401], 401);
+            return response(['message' => "username or password are wrong", 'statusCode' => 401], 200);
         }
     }
 

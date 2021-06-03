@@ -30,7 +30,7 @@ class resOrder extends Controller
         $order = DB::connection("resConn")->table(DN::resTables["resORDERS"])->where(DN::resORDERS["trackingId"], $trackingId);
 
         if(!$order->exists())
-            return response(array( 'message' => "tracking id is incorrect",'statusCode' => 404),404);
+            return response(array( 'message' => "tracking id is incorrect",'statusCode' => 404),200);
 
 
         if($order->value(DN::resORDERS["status"]) != $newOrderStatus) {
@@ -70,7 +70,7 @@ class resOrder extends Controller
                 return response(array( 'message' => "something went wrong during changing order status",'statusCode' => 500),500);
             }
         }else{
-            return response(array( 'message' => "new order status is like its previous one",'statusCode' => 400),400);
+            return response(array( 'message' => "new order status is like its previous one",'statusCode' => 400),200);
         }
     }
 
