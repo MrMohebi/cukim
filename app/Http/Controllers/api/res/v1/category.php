@@ -25,9 +25,8 @@ class category extends Controller
         $catPersianName = $request->input('catPersianName');
         $catEnglishName = $request->input('catEnglishName');
         $logo = $request->input('logo') ?? "";
-        $rank = $request->input('type') ?? "";
-        $type = $request->input('type') ?? "";
-        $resEnglishName = $request->input('resEnglishName') ?? "";
+        $rank = $request->input('rank') ?? "";
+        $type = $request->input('type') ?? "restaurant";
         $averageColor = $request->input('averageColor') ?? "";
 
         if (
@@ -37,13 +36,15 @@ class category extends Controller
             return response(["message" => "some of info are duplicate", 'statusCode' => 402], 402);
         }
 
+        $res = DB::table(DN::tables["RESTAURANTS"])->where(DN::RESTAURANTS["token"], $request->input("token"));
+
         $insertCreateCat = [
             DN::FOOD_GROUPS['pName'] => $catPersianName,
             DN::FOOD_GROUPS['eName'] => $catEnglishName,
             DN::FOOD_GROUPS['logo'] => $logo,
             DN::FOOD_GROUPS['status'] => "active",
             DN::FOOD_GROUPS['type'] => $type,
-            DN::FOOD_GROUPS['resEName'] => $resEnglishName,
+            DN::FOOD_GROUPS['resEName'] => $res->value(DN::RESTAURANTS["eName"]),
             DN::FOOD_GROUPS['averageColor'] => $averageColor,
             DN::FOOD_GROUPS["rank"]=>$rank,
             DN::CA=> Carbon::now()->timestamp,
