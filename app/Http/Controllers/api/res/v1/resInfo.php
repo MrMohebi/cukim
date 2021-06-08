@@ -65,6 +65,6 @@ class resInfo extends Controller
     public function getResInfo(){
         $resInfo = DB::connection("resConn")->table(DN::resTables["resINFO"]);
 
-        return response(array('statusCode'=>200, 'data'=>$resInfo ? CusStFunc::arrayKeysToCamel(json_decode(json_encode($resInfo->get()),true)) : array()));
+        return response(array('statusCode'=>200, 'data'=>$resInfo ? CusStFunc::arrayKeysToCamel(json_decode(json_encode($resInfo->first()),true)) : array()));
     }
 }
