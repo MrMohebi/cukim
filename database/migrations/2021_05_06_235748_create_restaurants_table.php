@@ -25,6 +25,7 @@ class CreateRestaurantsTable extends Migration
             $table->string('owner_id');
             $table->string('owner_name');
             $table->json('permissions')->nullable();
+            $table->json('disable_permissions')->nullable();
             $table->string('payment_key');
             $table->string('db_name');
             $table->string('ipg_name')->nullable();
