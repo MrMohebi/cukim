@@ -18,6 +18,173 @@ class Payping extends Ipg{
     protected static $URLPaymentResult = "http://paystatus.cukim.ir/";
 
 
+    static public function createOurPaymentLink(string $itemType, array $items, string $userToken, string $trackingId = null):array{
+        $userInfo = DB::table(DN::tables["RES_OWNERS"])->where("token", $userToken);
+        $userPhone = $userInfo->value(DN::RES_OWNERS["phone"]);
+        $userName = $userInfo->value(DN::RES_OWNERS["name"]);
+        if(strlen($userPhone) != 11)
+            return array('statusCode' => 401, "massage" => "user is not valid");
+        if(!$trackingId){
+            $trackingId = rand(11111111,99999999);
+        }
+        $amount = 1000;
+
+        if($itemType == "plan"){
+            $plan = DB::table(DN::tables["PLANS"])->where("id", $items[0]);
+            if(!$plan->exists())
+                return array('statusCode'=>404, "massage" => "plan not found!");
+            $items = [
+                "persianName"=>$plan->value(DN::PLANS["pName"]),
+                "englishName"=>$plan->value(DN::PLANS["eName"]),
+                "price"=>$plan->value(DN::PLANS["price"]),
+                "items"=> json_decode($plan->value(DN::PLANS["items"]))
+            ];
+            $planPrice = $plan->value(DN::PLANS["price"]);
+            $amount = ($planPrice - ($plan->value(DN::PLANS["disPercentage"])/100 * $planPrice)) - $plan->value(DN::PLANS["disAmount"]);
+        }
+
+
+        $info_params = array(
+            "amount" => $amount,
+            "payerIdentity" => $userPhone,
+            "payerName" => $userName,
+            "description"=>"",
+            "clientRefId"=>$trackingId,
+            "returnUrl" => self::$URLReturnIPG,
+        );
+
+        $api_key = env("PAYPING_KEY");
+
+        $result = Http::withToken($api_key)->post(self::$URLCreatePayment,$info_params)->json();
+        $payPingCode = $result['code'] ?? "";
+
+        $sqlInsert_createPaymentParams = array(
+            'ipg'=>"payping",
+            'tracking_id'=>$trackingId,
+            'payment_id'=>$trackingId,
+            'payment_group'=>"",
+            'payment_num'=>1,
+            'payment_key'=>"cuki",
+            'item_type'=>$itemType,
+            'item'=>json_encode($items),
+            'payer_phone'=>$userPhone,
+            'payer_name'=>$userName,
+            'amount'=>$amount,
+            'status'=>'0',
+            DN::CA =>time(),
+            DN::UA =>time(),
+        );
+
+
+        if(DB::table(DN::tables["PAYMENTS"])->insert($sqlInsert_createPaymentParams)){
+            if(strlen($payPingCode) > 2){
+                if(DB::table(DN::tables["PAYMENTS"])->where(DN::PAYMENTS["trackingId"],$trackingId)->update(array(DN::PAYMENTS["paypingCode"]=>$payPingCode,DN::UA =>time()))){
+                    return array(
+                        'statusCode'=>200,
+                        "data"=>array(
+                            "url"=>self::$URLPaymentLinkBase.$payPingCode,
+                            "amount"=>$amount,
+                            "paymentId"=>$trackingId,
+                        ));
+                }else{
+                    return array('statusCode'=>500);
+                }
+            }else{
+                return array('statusCode'=>408, "massage" => "something went wrong during getting payment link");
+            }
+        }else{
+            return array('statusCode'=>500, "massage" => "something went wrong during saving payment in our database");
+        }
+
+    }
+
+    static public function verifyOurPayment(string $code, string $refid, string $clientrefid):array{
+
+        // get payment info
+        $payment = DB::table(DN::tables["PAYMENTS"])->where(DN::PAYMENTS["paymentId"],$clientrefid);
+
+
+        // was verified before
+        if($payment->value(DN::PAYMENTS["verifiedAt"]) > 100){
+            return array('statusCode'=>409,"url"=>self::$URLPaymentResult."?".
+                "statusCode=409".
+                "&amount=".$payment->value(DN::PAYMENTS["amount"]).
+                "&paymentId=".$clientrefid.
+                "&trackingId=".$payment->value(DN::PAYMENTS["trackingId"]).
+                "&itemType=".$payment->value(DN::PAYMENTS["itemType"]).
+                "&item=".$payment->value(DN::PAYMENTS["item"])
+            );
+        }
+
+
+        $api_key = env("PAYPING_KEY");
+
+        $info_params = array(
+            "refId" => $refid,
+            'amount'=> $payment->value(DN::PAYMENTS["amount"]),
+        );
+
+        $result = Http::withToken($api_key)->post(self::$URLVerifyPayment,$info_params)->json();
+
+
+        $verifyCardNumber = $result['cardNumber'] ?? null;
+        $verifyCardHash = $result['cardHashPan'] ?? null;
+        $verifyAmount = $result['amount'] ?? null;
+
+
+        //check payment is valid and its not duplicate
+        if(strlen($verifyCardHash) > 1 && ($payment->value(DN::PAYMENTS["verifiedAt"]) < 1000) && ($payment->value(DN::PAYMENTS["amount"]) == $verifyAmount)){
+            $sqlUpdate_paymentPaidParams = array(
+                DN::PAYMENTS["verifiedAt"]=>time(),
+                DN::PAYMENTS["payerCard"]=>$verifyCardNumber,
+                DN::PAYMENTS["payerCardHash"]=>$verifyCardHash,
+            );
+            if($payment->update($sqlUpdate_paymentPaidParams)){
+                if($payment->value(DN::PAYMENTS["itemType"]) == "plan"){
+                    $resOwner = DB::table(DN::tables["RES_OWNERS"])->where(DN::RES_OWNERS["phone"], $payment->value(DN::PAYMENTS["payerPhone"]));
+                    $newPlanesList = json_decode($resOwner->value(DN::RES_OWNERS["plans"])) ?? [];
+                    $newPlanesList[] = json_decode($payment->value(DN::PAYMENTS["item"]));
+                    $resOwner->update([DN::RES_OWNERS["plans"]=>json_encode($newPlanesList)]);
+                    DB::table(DN::tables["PLANS"])->where(DN::PLANS["eName"], json_decode($payment->value(DN::PAYMENTS["item"]), true)["englishName"])->increment(DN::PLANS["buyTimes"]);
+                }
+
+                return array('statusCode'=>200,"url"=>self::$URLPaymentResult."?".
+                    "statusCode=200".
+                    "&amount=".$payment->value(DN::PAYMENTS["amount"]).
+                    "&paymentId=".$clientrefid.
+                    "&trackingId=".$clientrefid.
+                    "&itemType=".$payment->value(DN::PAYMENTS["itemType"]).
+                    "&item=".$payment->value(DN::PAYMENTS["item"])
+                );
+
+            }else{
+                return array('statusCode'=>500,"url"=>self::$URLPaymentResult."?".
+                    "statusCode=500".
+                    "&details=payment couldn't be saved on our server".
+                    "&amount=".$payment->value(DN::PAYMENTS["amount"]).
+                    "&paymentId=".$clientrefid.
+                    "&trackingId=".$clientrefid.
+                    "&itemType=".$payment->value(DN::PAYMENTS["itemType"]).
+                    "&item=".$payment->value(DN::PAYMENTS["item"])
+                );
+            }
+        }else{
+            return array('statusCode'=>402,"url"=>self::$URLPaymentResult."?".
+                "statusCode=402".
+                "&details=payment is not valid or it's duplicate or was canceled".
+                "&amount=".$payment->value(DN::PAYMENTS["amount"]).
+                "&paymentId=".$clientrefid.
+                "&trackingId=".$clientrefid.
+                "&itemType=".$payment->value(DN::PAYMENTS["itemType"]).
+                "&item=".$payment->value(DN::PAYMENTS["item"])
+            );
+        }
+
+    }
+
+
+
+
 
     static public function createPaymentLink(string $resEnglishName, string $userToken, string $trackingId, int $amount, string $itemType, array $items):array{
         $resData = DB::table("restaurants")
@@ -42,6 +209,8 @@ class Payping extends Ipg{
             $paymentIdType = "f";
             $foodsFullInfo = self::getFoodInfo($items);
             $items = $foodsFullInfo;
+        }else if($itemType == "plan"){
+            $paymentIdType = "p";
         }
 
 
