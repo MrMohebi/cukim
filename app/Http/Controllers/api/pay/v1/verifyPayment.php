@@ -29,6 +29,13 @@ class verifyPayment extends Controller
         $cardnumber = $request->input("cardnumber");
         $cardhashpan = $request->input("cardhashpan");
 
+        // our payments
+        if(is_numeric($clientrefid)){
+            $linkData = Payping::verifyOurPayment($code, $refid, $clientrefid);
+            return redirect($linkData["url"]) ;
+        }
+
+
         $paymentKey = explode("-",$clientrefid)[1];
         $res = DB::table(DN::tables["RESTAURANTS"])->where(DN::RESTAURANTS["paymentKey"], $paymentKey);
 
