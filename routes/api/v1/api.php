@@ -76,6 +76,7 @@ Route::prefix("/resOwner")->group(function (){
     });
     Route::post("/signin",[signin::class,"signin"]);
     Route::post("/signup",[signup::class,"signup"]);
+    Route::post("/signupAndBuyPlan",[signup::class,"signupAndBuyPlan"]);
 });
 
 
