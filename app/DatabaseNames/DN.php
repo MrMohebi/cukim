@@ -15,6 +15,18 @@ class DN
         "RESTAURANTS"=>"restaurants",
         "USERS"=>"users",
         "PAYMENTS"=>"payments",
+        "PLANS"=>"plans"
+    ];
+
+    const PLANS =[
+        "pName"=>"persian_name",
+        "eName"=>"english_name",
+        "items"=>"items",
+        "details"=>"details",
+        "price"=>"price",
+        "disPercentage"=>"discount_percentage",
+        "disAmount"=>"discount_amount",
+        "buyTimes"=>"buy_times",
     ];
 
     const PAYMENTS = [
@@ -159,7 +171,14 @@ class DN
         'vCode'=>"verification_code",
         'vCodeTries'=>"verification_code_tries",
         'token'=>"token",
-        'phone'=>"phone"
+        'phone'=>"phone",
+        "username"=>"username",
+        "password"=>"password",
+        "name"=>"name",
+        "restaurantsIds"=>"restaurants_ids",
+        "paymentIds"=>"payment_ids",
+        "plans"=>"plans",
+        "email"=>"email",
     ];
 
     const FOOD_GROUPS=[
