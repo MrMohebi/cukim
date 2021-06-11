@@ -622,8 +622,31 @@
  ## ResOwner API
 | address | Description  |
 | --- |---   |
+| [signin](#resownersignin-post) |  |
 | [signup](#resownersignup-post) | register a new res owner |
+| [sendVCode](#resownersendvcode-post) |  |
+| [verifyVCode](#resownerverifyvcode-post) |  |
+| [signupAndBuyPlan](#resownersignupandbuyplan-post) |  |
+| [buyPlan](#resownerbuyplan-post) |  |
 | [createNewRes](#resownercreatenewres-post) | create a new restaurant |
+
+
+
+
+> ### ```/resOwner/signin``` ```POST```
+>
+> #### Required fields:
+>   - **username**
+>   - **password**
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": []
+>   }
+>   ```
+
 
 
 > ### ```/resOwner/signup``` ```POST```
@@ -637,6 +660,79 @@
 >   ```json
 >   {
 >     "statusCode": "[code]"
+>   }
+>   ```
+
+
+> ### ```/resOwner/sendVCode``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>   - **phone**
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": [
+>       "phone":"09111111111"
+>     ]  
+>   }
+>   ```
+
+
+> ### ```/resOwner/verifyVCode``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>   - **vCode**
+>   - **name**
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]"
+>   }
+>   ```
+
+
+
+> ### ```/resOwner/signupAndBuyPlan``` ```POST```
+>
+> #### Required fields:
+>   - **username** [__phone number__]
+>   - **planId**
+>   - **name**
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": [
+>       "url":"",
+>       "amount":"numeric",
+>       "trackingId":""
+>     ]  
+>   }
+>   ```
+
+
+
+> ### ```/resOwner/buyPlan``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>   - **planId**
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": [
+>       "url":"",
+>       "amount":"numeric",
+>       "trackingId":""
+>     ]  
 >   }
 >   ```
 
