@@ -5,6 +5,7 @@ use App\Http\Controllers\api\resOwner\v1\res;
 use App\Http\Controllers\api\resOwner\v1\signup;
 use App\Http\Controllers\api\resOwner\v1\signin;
 use App\Http\Controllers\api\resOwner\v1\smsRO;
+use App\Http\Controllers\api\resOwner\v1\resOwnerBuy;
 use App\Http\Controllers\api\admin\v1\login;
 use App\Http\Controllers\api\cuki\v1\resData;
 use App\Http\Controllers\api\cuki\v1\user;
@@ -73,6 +74,7 @@ Route::prefix("/resOwner")->group(function (){
         Route::post("/createNewRes",[res::class,"createNewRes"]);
         Route::post("/sendVCode",[smsRO::class,"sendVCode"]);
         Route::post("/verifyVCode",[smsRO::class,"verifyVCode"]);
+        Route::post("/buyPlan",[resOwnerBuy::class,"buyPlan"]);
     });
     Route::post("/signin",[signin::class,"signin"]);
     Route::post("/signup",[signup::class,"signup"]);
