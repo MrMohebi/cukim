@@ -22,6 +22,7 @@ use App\Http\Controllers\api\res\v1\resInfo;
 use App\Http\Controllers\api\res\v1\resPager;
 use App\Http\Controllers\api\pay\v1\createLink;
 use App\Http\Controllers\api\pay\v1\verifyPayment;
+use App\Http\Controllers\api\resOwner\v1\plans;
 
 Route::prefix("/cuki")->group(function (){
     Route::group(["middleware"=>["cukiToken"]], function () {
@@ -79,6 +80,7 @@ Route::prefix("/resOwner")->group(function (){
     Route::post("/signin",[signin::class,"signin"]);
     Route::post("/signup",[signup::class,"signup"]);
     Route::post("/signupAndBuyPlan",[signup::class,"signupAndBuyPlan"]);
+    Route::post("/getPlans",[plans::class,"getPlansInfo"]);
 });
 
 
