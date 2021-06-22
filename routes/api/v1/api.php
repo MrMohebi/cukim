@@ -14,6 +14,7 @@ use App\Http\Controllers\api\cuki\v1\getIpInfo;
 use App\Http\Controllers\api\cuki\v1\pager;
 use App\Http\Controllers\api\cuki\v1\comment;
 use App\Http\Controllers\api\cuki\v1\payment;
+use App\Http\Controllers\api\cuki\v1\offCode;
 use App\Http\Controllers\api\res\v1\resLogin;
 use App\Http\Controllers\api\res\v1\resOrder;
 use App\Http\Controllers\api\res\v1\food;
@@ -34,6 +35,7 @@ Route::prefix("/cuki")->group(function (){
         Route::post("/getOrderByTrackingId",[order::class,"getOrderByTrackingId"]);
         Route::post("/sendComment",[comment::class,"sendComment"]);
         Route::post("/getPaymentByTrackingId",[payment::class,"getPaymentByTrackingId"]);
+        Route::post("/getOffCodes",[offCode::class,"getOffCodes"]);
     });
 
     Route::post("/getCommentsByFoodId",[comment::class,"getCommentsByFoodId"]);

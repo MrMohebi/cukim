@@ -15,7 +15,27 @@ class DN
         "RESTAURANTS"=>"restaurants",
         "USERS"=>"users",
         "PAYMENTS"=>"payments",
-        "PLANS"=>"plans"
+        "PLANS"=>"plans",
+        "OFF_CODES"=>"off_codes",
+    ];
+
+
+    const OFF_CODES =[
+        "code"=>"code",
+        "creator"=>"creator",
+        "target"=>"target",
+        "place"=>"place",
+        "times"=>"times",
+        "used"=>"used",
+        "maxAmount"=>"max_amount",
+        "minAmount"=>"min_amount",
+        "disPercentage"=>"discount_percentage",
+        "disAmount"=>"discount_amount",
+        "name"=>"name",
+        "body"=>"body",
+        "from"=>"from",
+        "to"=>"to",
+        "status"=>"status"
     ];
 
     const PLANS =[
