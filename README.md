@@ -31,6 +31,8 @@
 | [setUserInfo](#cukisetuserinfo-post) |  |
 | [getTempToken](#cukigettemptoken-post) |  |
 | [getUserInfo](#cukigetuserinfo-post) |  |
+| [getOffCodes](#cukigetoffcodes-post) |  |
+| [validateOffCode](#cukivalidateoffcode-post) |  |
 
 
 > ### ```/cuki/getUserInfo``` ```POST```
@@ -308,6 +310,39 @@
 >        "location": "",
 >        "timezone": ""
 >     }
+>   }
+>   ```
+
+
+> ### ```/cuki/getOffCodes``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>   - **resEnglishName**
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": []
+>   }
+>   ```
+
+
+
+> ### ```/cuki/validateOffCode``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>   - **resEnglishName**
+>   - **offCode**
+>   - **amount**
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": [
+>       "isOffCodeValid": "bool"
+>     ]
 >   }
 >   ```
 
@@ -764,7 +799,7 @@
 >   ```json
 >   {
 >     "statusCode": "[code]",
->     "data": [],
+>     "data": []
 >   }
 >   ```
 

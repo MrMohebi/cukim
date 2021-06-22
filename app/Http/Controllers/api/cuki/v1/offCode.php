@@ -56,12 +56,6 @@ class offCode extends Controller{
                 [DN::OFF_CODES["target"], "=" , $user->value(DN::USERS["phone"])],
                 [DN::OFF_CODES["status"], "=" , "active"],
             ])
-//            ->where(function ($query) use ($amount) {
-//                $query->where([[DN::OFF_CODES["maxAmount"], "=", 0], [DN::OFF_CODES["minAmount"], "<=", $amount]])
-//                    ->orWhere([[DN::OFF_CODES["minAmount"], "=", 0], [DN::OFF_CODES["maxAmount"], ">=", $amount]])
-//                    ->orWhere([[DN::OFF_CODES["minAmount"], "=", 0], [DN::OFF_CODES["maxAmount"], "=", 0]])
-//                    ->orWhere([[DN::OFF_CODES["maxAmount"], ">=", $amount], [DN::OFF_CODES["minAmount"], "<=", $amount]]);
-//            })
             ->where(function ($query) use ($request) {
                 $query->where(DN::OFF_CODES["creator"], $request->input("resEnglishName"))
                     ->orWhere(DN::OFF_CODES["creator"], 'system');
