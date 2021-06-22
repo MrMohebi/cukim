@@ -36,6 +36,7 @@ Route::prefix("/cuki")->group(function (){
         Route::post("/sendComment",[comment::class,"sendComment"]);
         Route::post("/getPaymentByTrackingId",[payment::class,"getPaymentByTrackingId"]);
         Route::post("/getOffCodes",[offCode::class,"getOffCodes"]);
+        Route::post("/validateOffCode",[offCode::class,"validateOffCode"]);
     });
 
     Route::post("/getCommentsByFoodId",[comment::class,"getCommentsByFoodId"]);
