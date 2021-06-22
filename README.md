@@ -629,6 +629,7 @@
 | [signupAndBuyPlan](#resownersignupandbuyplan-post) |  |
 | [buyPlan](#resownerbuyplan-post) |  |
 | [createNewRes](#resownercreatenewres-post) | create a new restaurant |
+| [getPlans](#resownergetplans-post) |  |
 
 
 
@@ -755,6 +756,17 @@
 >   ```
 
 
+
+> ### ```/resOwner/getPlans``` ```POST```
+>
+> #### Required fields:
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": [],
+>   }
+>   ```
 
 
 
