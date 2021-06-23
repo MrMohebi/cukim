@@ -53,7 +53,8 @@ class order extends Controller
 
         $totalPrice = $orderPrice;
         if (strlen($offCode) > 2){
-            $tOffCode = self::useOffCode($offCode, $orderPrice, $user->value(DN::USERS["phone"]), $englishName);
+            $tOffCode = self::useOffCode($offCode, $orderPrice, $user->value(DN::USERS["phone"]), $englishName, $ordersFullInfo);
+            $ordersFullInfo = $tOffCode["orderItems"];
             $offCode = $tOffCode["code"];
             $totalPrice = $tOffCode["finalPrice"];
         }
@@ -243,7 +244,7 @@ class order extends Controller
         return $totalPrice;
     }
 
-    private static function useOffCode($offCodeCode, $price, $userPhone, $resEnglishName):array{
+    private static function useOffCode($offCodeCode, $price, $userPhone, $resEnglishName, $orderItems):array{
         $finalPrice = $price;
         $offCode = DB::table(DN::tables["OFF_CODES"])
             ->where([
@@ -266,16 +267,22 @@ class order extends Controller
             ->whereColumn(DN::OFF_CODES["used"], "<", DN::OFF_CODES["times"]);
 
         if($offCode->exists()){
+            $code = $offCode->value(DN::OFF_CODES["code"]);
             if($offCode->value(DN::OFF_CODES["disAmount"]) > 100){
                 $finalPrice = $price - $offCode->value(DN::OFF_CODES["disAmount"]);
+                $disPercentage = (($price - $finalPrice) / $price * 100);
             }else{
-                $finalPrice = (100-$offCode->value(DN::OFF_CODES["disPercentage"])) / 100 * $price;
+                $disPercentage = $offCode->value(DN::OFF_CODES["disPercentage"]);
+                $finalPrice = ceil((100-$disPercentage) / 100 * $price);
+            }
+            for ($i=0; $i < count($orderItems); $i++){
+                $orderItems[$i]["priceAfterDiscount"] =  ceil(((100-$disPercentage) / 100 * $orderItems[$i]["priceAfterDiscount"])/1000)*1000;
             }
             $offCode->increment(DN::OFF_CODES["used"]);
             $offCode->update([DN::UA=>time()]);
-            return ["statusCode"=>200,"code"=>$offCode->value(DN::OFF_CODES["code"]), "finalPrice"=>$finalPrice];
+            return ["statusCode"=>200,"code"=>$code, "finalPrice"=>$finalPrice, "orderItems"=>$orderItems];
         }else{
-            return ["statusCode"=>404, "code"=>"", "massage"=>"offCode is not valid", "finalPrice"=>$finalPrice];
+            return ["statusCode"=>404, "code"=>"", "massage"=>"offCode is not valid", "finalPrice"=>$finalPrice, "orderItems"=>$orderItems];
         }
 
 
