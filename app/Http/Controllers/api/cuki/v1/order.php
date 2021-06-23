@@ -20,7 +20,7 @@ class order extends Controller
             'details'=>"json",
             'deliveryAt'=>"numeric",
             'deliveryPrice'=>"numeric",
-            "resEnglishName"=>"required|min:3"
+            "resEnglishName"=>"required|min:3",
         ]);
 
         if($validator->fails())
@@ -31,7 +31,6 @@ class order extends Controller
 
 
         $randomNum = rand(11111111,99999999);
-//        $offcodeUsed = false;
 
         $englishName =  $request->input("resEnglishName");
         $token =  $request->input("token");
@@ -41,6 +40,7 @@ class order extends Controller
         $deliveryPrice  =  $request->input("deliveryPrice");
         $address =  json_decode(str_replace("\\","",$request->input("address")),true);
         $table  =  $request->input("table");
+        $offCode  =  $request->input("offCode");
 
         $user = DB::table(DN::tables["USERS"])->where(DN::USERS["token"], $token);
 
@@ -51,8 +51,13 @@ class order extends Controller
         $ordersFullInfo = self::getFoodInfo($items_array);
         $orderPrice = self::TotalPriceWithDiscount($ordersFullInfo);
 
-        // change it when off codes added
         $totalPrice = $orderPrice;
+        if (strlen($offCode) > 2){
+            $tOffCode = self::useOffCode($offCode, $orderPrice, $user->value(DN::USERS["phone"]), $englishName);
+            $offCode = $tOffCode["code"];
+            $totalPrice = $tOffCode["finalPrice"];
+        }
+
 
         if($orderPrice < 900){
             return response(["massage"=>"order list is empty", "statusCode"=>405],405);
@@ -72,6 +77,7 @@ class order extends Controller
             DN::resORDERS["tPrice"] => $totalPrice,
             DN::resORDERS["deliveryAt"] => $deliveryAt,
             DN::resORDERS["paidAmount"] => 0,
+            DN::resORDERS["offcode"] => $offCode,
             DN::UA => Carbon::now()->timestamp,
             DN::CA => Carbon::now()->timestamp,
         );
@@ -88,6 +94,7 @@ class order extends Controller
                         'trackingId' => $randomNum,
                         'totalPrice' => $totalPrice,
                         "deliveryAt" => $deliveryAt,
+                        "isOffCodeUsed"=> strlen($offCode) > 2,
                     )
                 ));
             } else {
@@ -206,7 +213,7 @@ class order extends Controller
 
 
 
-    private static function sendSMSToCounter($customerPhone, $orderList, $finalPrice):bool{
+    private static function sendSMSToCounter($customerPhone, $orderList, $finalPrice): void{
         $smsApi = new GhasedakApi(env('GHASEDAKAPI_KEY'));
 
         $carbon = new Carbon();
@@ -225,9 +232,7 @@ class order extends Controller
         $counterPhone = DB::connection("resConn")->table(DN::resTables['resINFO'])->latest()->first()->{DN::resINFO["counterPhone"]};
         if(strlen($counterPhone) == 11){
             $smsApi->SendSimple($counterPhone, $massageTemplate, 50001212124276);
-            return true;
         }
-        return false;
     }
 
     private static function TotalPriceWithDiscount($OrderedFoodsInfo){
@@ -236,6 +241,44 @@ class order extends Controller
             $totalPrice += $eachFood['priceAfterDiscount'] * $eachFood['number'];
         }
         return $totalPrice;
+    }
+
+    private static function useOffCode($offCodeCode, $price, $userPhone, $resEnglishName):array{
+        $finalPrice = $price;
+        $offCode = DB::table(DN::tables["OFF_CODES"])
+            ->where([
+                [DN::OFF_CODES["code"], "=" , $offCodeCode],
+                [DN::OFF_CODES["target"], "=" , $userPhone],
+                [DN::OFF_CODES["status"], "=" , "active"],
+                [DN::OFF_CODES["from"], "<=", time()],
+                [DN::OFF_CODES["to"], ">=", time()],
+            ])
+            ->where(function ($query) use ($price) {
+                $query->where([[DN::OFF_CODES["maxAmount"], "=", 0], [DN::OFF_CODES["minAmount"], "<=", $price]])
+                    ->orWhere([[DN::OFF_CODES["minAmount"], "=", 0], [DN::OFF_CODES["maxAmount"], ">=", $price]])
+                    ->orWhere([[DN::OFF_CODES["minAmount"], "=", 0], [DN::OFF_CODES["maxAmount"], "=", 0]])
+                    ->orWhere([[DN::OFF_CODES["maxAmount"], ">=", $price], [DN::OFF_CODES["minAmount"], "<=", $price]]);
+            })
+            ->where(function ($query) use ($resEnglishName) {
+                $query->where(DN::OFF_CODES["creator"], $resEnglishName)
+                    ->orWhere(DN::OFF_CODES["creator"], 'system');
+            })
+            ->whereColumn(DN::OFF_CODES["used"], "<", DN::OFF_CODES["times"]);
+
+        if($offCode->exists()){
+            if($offCode->value(DN::OFF_CODES["disAmount"]) > 100){
+                $finalPrice = $price - $offCode->value(DN::OFF_CODES["disAmount"]);
+            }else{
+                $finalPrice = (100-$offCode->value(DN::OFF_CODES["disPercentage"])) / 100 * $price;
+            }
+            $offCode->increment(DN::OFF_CODES["used"]);
+            $offCode->update([DN::UA=>time()]);
+            return ["statusCode"=>200,"code"=>$offCode->value(DN::OFF_CODES["code"]), "finalPrice"=>$finalPrice];
+        }else{
+            return ["statusCode"=>404, "code"=>"", "massage"=>"offCode is not valid", "finalPrice"=>$finalPrice];
+        }
+
+
     }
 
     private static function isResActive():bool{

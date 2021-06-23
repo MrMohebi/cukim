@@ -239,6 +239,7 @@
 >   - deliveryPrice
 >   - address
 >   - table
+>   - offCode
 >
 >   #### Return Values ``JSON``:
 >   ```json
@@ -247,7 +248,8 @@
 >     "data": {
 >           "trackingId":  "",
 >           "totalPrice":  "",
->           "deliveryAt": ""
+>           "deliveryAt": "",
+>           "isOffCodeUsed": "bool"
 >     }
 >   }
 >   ```
