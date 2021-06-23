@@ -48,31 +48,29 @@ class offCode extends Controller{
 
 
         $amount = $request->input("amount");
-        $isOffCodeValid = false;
 
         $user = DB::table(DN::tables["USERS"])->where(DN::USERS["token"] ,$request->input("token"));
         $offCode = DB::table(DN::tables["OFF_CODES"])
             ->where([
+                [DN::OFF_CODES["code"], "=" , $request->input("offCode")],
                 [DN::OFF_CODES["target"], "=" , $user->value(DN::USERS["phone"])],
                 [DN::OFF_CODES["status"], "=" , "active"],
+                [DN::OFF_CODES["from"], "<=", time()],
+                [DN::OFF_CODES["to"], ">=", time()],
             ])
+            ->where(function ($query) use ($amount) {
+                $query->where([[DN::OFF_CODES["maxAmount"], "=", 0], [DN::OFF_CODES["minAmount"], "<=", $amount]])
+                    ->orWhere([[DN::OFF_CODES["minAmount"], "=", 0], [DN::OFF_CODES["maxAmount"], ">=", $amount]])
+                    ->orWhere([[DN::OFF_CODES["minAmount"], "=", 0], [DN::OFF_CODES["maxAmount"], "=", 0]])
+                    ->orWhere([[DN::OFF_CODES["maxAmount"], ">=", $amount], [DN::OFF_CODES["minAmount"], "<=", $amount]]);
+            })
             ->where(function ($query) use ($request) {
                 $query->where(DN::OFF_CODES["creator"], $request->input("resEnglishName"))
                     ->orWhere(DN::OFF_CODES["creator"], 'system');
             })
             ->whereColumn(DN::OFF_CODES["used"], "<", DN::OFF_CODES["times"]);
 
-            if( $offCode->exists() &&
-                ($offCode->value(DN::OFF_CODES["from"]) <= time() && $offCode->value(DN::OFF_CODES["to"]) >= time())&&(
-                ($offCode->value(DN::OFF_CODES["maxAmount"]) == 0 && $offCode->value(DN::OFF_CODES["minAmount"]) <= $amount)||
-                ($offCode->value(DN::OFF_CODES["minAmount"]) == 0 && $offCode->value(DN::OFF_CODES["maxAmount"]) >= $amount)||
-                ($offCode->value(DN::OFF_CODES["minAmount"]) == 0 && $offCode->value(DN::OFF_CODES["maxAmount"]) == 0)||
-                ($offCode->value(DN::OFF_CODES["maxAmount"]) >= $amount && $offCode->value(DN::OFF_CODES["minAmount"]) <= $amount)
-            )) {
-                $isOffCodeValid = true;
-            }
-
-        return response(["data"=>["isOffCodeValid"=>$isOffCodeValid], "statusCode"=>200]);
+        return response(["data"=>["isOffCodeValid"=>$offCode->exists()], "statusCode"=>200]);
 
     }
 }
