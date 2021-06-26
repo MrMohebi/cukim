@@ -125,7 +125,6 @@
 > ### ```/cuki/getResENameByCode``` ```POST```
 >
 > #### Required fields:
->   - **token**
 >   - **resCode**
 >   #### Return Values ``JSON``:
 >   ```json
@@ -142,7 +141,6 @@
 > ### ```/cuki/getResParts``` ```POST```
 >
 > #### Required fields:
->   - **token**
 >   - **resEnglishName**
 >   #### Return Values ``JSON``:
 >   ```json
@@ -157,7 +155,6 @@
 > ### ```/cuki/getResData``` ```POST```
 >
 > #### Required fields:
->   - **token**
 >   - **resEnglishName**
 >   #### Return Values ``JSON``:
 >   ```json
