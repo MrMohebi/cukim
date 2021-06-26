@@ -33,7 +33,7 @@ class resData extends Controller
         if($validator->fails())
             return response(["massage"=>$validator->errors()->all(), "statusCode"=>400],"400");
 
-        return response(["data"=>json_decode(self::getResInfo()[DN::resINFO["type"]])]);
+        return response(['statusCode'=>200,"data"=>json_decode(self::getResInfo()[DN::resINFO["type"]])]);
     }
 
     public function getResENameByCode(Request $request){
