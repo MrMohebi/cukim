@@ -25,6 +25,7 @@
 | [getPaymentByTrackingId](#cukigetpaymentbytrackingid-post) |  |
 | [getResData](#cukigetresdata-post) |  |
 | [getResParts](#cukigetresparts-post) |  |
+| [getResInfo](#cukigetresinfo-post) |  |
 | [getResENameByCode](#cukigetresenamebycode-post) |  |
 | [sendVCode](#cukisendvcode-post) |  |
 | [verifyVCode](#cukiverifyvcode-post) |  |
@@ -149,6 +150,20 @@
 >     "data": []
 >   }
 >   ```
+
+
+> ### ```/cuki/getResInfo``` ```POST```
+>
+> #### Required fields:
+>   - **resEnglishName**
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": []
+>   }
+>   ```
+
 
 
 
