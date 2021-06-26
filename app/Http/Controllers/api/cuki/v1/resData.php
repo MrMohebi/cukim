@@ -24,6 +24,16 @@ class resData extends Controller
                 'restaurantInfo'=>self::getResInfo()
             ),'statusCode'=>200));
     }
+    public function getResFoods(Request $request){
+        $validator = Validator::make($request->all(),[
+            'resEnglishName'=>"required",
+        ]);
+
+        if($validator->fails())
+            return response(["massage"=>$validator->errors()->all(), "statusCode"=>400],"400");
+
+        return response(array('data'=>self::getFoodList(),'statusCode'=>200));
+    }
 
     public function getResInfoApi(Request $request){
         $validator = Validator::make($request->all(),[
