@@ -46,6 +46,7 @@ Route::prefix("/cuki")->group(function (){
     Route::post("/verifyVCode",[user::class,"verifyVCode"]);
     Route::post("/getResData",[resData::class,"getResData"]);
     Route::post("/getResParts",[resData::class,"getResParts"]);
+    Route::post("/getResInfo",[resData::class,"getResInfoApi"]);
     Route::post("/getResENameByCode",[resData::class,"getResENameByCode"]);
     Route::get("/getIpInfo",[getIpInfo::class,"getIpInfo"]);
 
