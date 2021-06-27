@@ -105,6 +105,7 @@ class resData extends Controller
 
         for($i = 0; $i < count($foodsList) ; $i++){
             $group=array();
+            $foodsList[$i]->{DN::resFOODS["details"]} = json_decode($foodsList[$i]->{DN::resFOODS["details"]});
             foreach ($groupsInfo as $eGroup){
                 if($eGroup->{DN::FOOD_GROUPS["eName"]} == $foodsList[$i]->{DN::resFOODS["group"]}){
                     $group = $eGroup;
