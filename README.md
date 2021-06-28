@@ -27,6 +27,7 @@
 | [getResParts](#cukigetresparts-post) |  |
 | [getResInfo](#cukigetresinfo-post) |  |
 | [getResFoods](#cukigetresfoods-post) |  |
+| [getFoodById](#cukigetfoodbyid-post) |  |
 | [getResUpdateDates](#cukigetresupdatedates-post) |  |
 | [getResENameByCode](#cukigetresenamebycode-post) |  |
 | [sendVCode](#cukisendvcode-post) |  |
@@ -195,6 +196,24 @@
 >     }
 >   }
 >   ```
+
+
+
+> ### ```/cuki/getFoodById``` ```POST```
+>
+> #### Required fields:
+>   - **resEnglishName**
+>   - **foodId**
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": []
+>   }
+>   ```
+
+
+
 
 
 

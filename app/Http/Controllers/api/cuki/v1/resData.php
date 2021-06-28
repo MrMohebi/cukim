@@ -12,6 +12,23 @@ use App\CustomFunctions\CusStFunc;
 class resData extends Controller
 {
 
+
+    public function getFoodById(Request $request){
+        $validator = Validator::make($request->all(),[
+            'resEnglishName'=>"required",
+            "foodId"=>"required",
+        ]);
+
+        if($validator->fails())
+            return response(["massage"=>$validator->errors()->all(), "statusCode"=>400],"400");
+
+        $food = DB::connection("resConn")
+            ->table(DN::resTables["resFOODS"])
+            ->find($request->input("foodId"));
+
+        return response(array('data'=>json_decode(json_encode($food),true),'statusCode'=>200));
+    }
+
     public function getUpdateDates(Request $request){
         $validator = Validator::make($request->all(),[
             'resEnglishName'=>"required",
