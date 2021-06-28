@@ -11,6 +11,32 @@ use App\CustomFunctions\CusStFunc;
 
 class resData extends Controller
 {
+
+    public function getUpdateDates(Request $request){
+        $validator = Validator::make($request->all(),[
+            'resEnglishName'=>"required",
+        ]);
+
+        if($validator->fails())
+            return response(["massage"=>$validator->errors()->all(), "statusCode"=>400],"400");
+
+        $foodsList = json_decode(json_encode(DB::connection("resConn")
+            ->table(DN::resTables["resFOODS"])
+            ->select(DN::UA, "id",DN::resFOODS["orderTimes"])
+            ->where(DN::resFOODS["status"], "!=","deleted")
+            ->get()),true);
+
+        $foodsUpdatedAtList = [];
+        foreach ($foodsList as $eFood){
+            $foodsUpdatedAtList[$eFood["id"]] = [$eFood[DN::UA], $eFood[DN::resFOODS["orderTimes"]]];
+        }
+
+        return response(array('data'=>array(
+            'foods'=>$foodsUpdatedAtList,
+            'restaurantInfo'=>self::getResInfo()["updatedAt"]
+        ),'statusCode'=>200));
+    }
+
     public function getResData(Request $request){
         $validator = Validator::make($request->all(),[
             'resEnglishName'=>"required",

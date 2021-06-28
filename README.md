@@ -27,6 +27,7 @@
 | [getResParts](#cukigetresparts-post) |  |
 | [getResInfo](#cukigetresinfo-post) |  |
 | [getResFoods](#cukigetresfoods-post) |  |
+| [getResUpdateDates](#cukigetresupdatedates-post) |  |
 | [getResENameByCode](#cukigetresenamebycode-post) |  |
 | [sendVCode](#cukisendvcode-post) |  |
 | [verifyVCode](#cukiverifyvcode-post) |  |
@@ -175,6 +176,23 @@
 >   {
 >     "statusCode": "[code]",
 >     "data": []
+>   }
+>   ```
+
+
+
+> ### ```/cuki/getResUpdateDates``` ```POST```
+>
+> #### Required fields:
+>   - **resEnglishName**
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": {
+>       "foods": {"id": ["updateDate", "orderTimes"]},
+>       "restaurantInfo": "int" 
+>     }
 >   }
 >   ```
 
