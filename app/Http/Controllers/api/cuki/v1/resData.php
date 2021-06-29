@@ -39,7 +39,7 @@ class resData extends Controller
             $food = $food->first();
         }
 
-        return response(array('data'=>json_decode(json_encode($food),true),'statusCode'=>200));
+        return response(array('data'=>CusStFunc::arrayKeysToCamel(json_decode(json_encode($food),true)),'statusCode'=>200));
     }
 
     public function getUpdateDates(Request $request){
