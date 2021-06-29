@@ -22,9 +22,20 @@ class resData extends Controller
         if($validator->fails())
             return response(["massage"=>$validator->errors()->all(), "statusCode"=>400],"400");
 
-        $food = DB::connection("resConn")
-            ->table(DN::resTables["resFOODS"])
-            ->find($request->input("foodId"));
+        $foodId = json_decode($request->input("foodId"));
+
+        if(is_array($foodId)){
+            $food = DB::connection("resConn")
+                ->table(DN::resTables["resFOODS"])
+                ->whereIn('id', $foodId)
+                ->get();
+
+        }else{
+            $food = DB::connection("resConn")
+                ->table(DN::resTables["resFOODS"])
+                ->find($foodId);
+
+        }
 
         return response(array('data'=>json_decode(json_encode($food),true),'statusCode'=>200));
     }
