@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\cuki\v1;
 use App\DatabaseNames\DN;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\CustomFunctions\CusStFunc;
@@ -25,16 +26,17 @@ class resData extends Controller
         $foodId = json_decode($request->input("foodId"));
 
         if(is_array($foodId)){
-            $food = DB::connection("resConn")
+            $food = self::addFoodGroupInfo(DB::connection("resConn")
                 ->table(DN::resTables["resFOODS"])
                 ->whereIn('id', $foodId)
-                ->get();
+                ->get());
 
         }else{
-            $food = DB::connection("resConn")
+            $food = self::addFoodGroupInfo(DB::connection("resConn")
                 ->table(DN::resTables["resFOODS"])
-                ->find($foodId);
-
+                ->where('id', $foodId)
+                ->get());
+            $food = $food->first();
         }
 
         return response(array('data'=>json_decode(json_encode($food),true),'statusCode'=>200));
@@ -147,15 +149,8 @@ class resData extends Controller
     }
 
 
-
-    static public function getFoodList():array{
-        $foodsList = DB::connection("resConn")
-            ->table(DN::resTables["resFOODS"])
-            ->where(DN::resFOODS["status"], "!=","deleted")
-            ->get();
-
+    static public function addFoodGroupInfo(Collection $foodsList):Collection{
         $groupsInfo = DB::table(DN::tables["FOOD_GROUPS"])->get();
-
 
         for($i = 0; $i < count($foodsList) ; $i++){
             $group=array();
@@ -178,6 +173,17 @@ class resData extends Controller
             );
             $foodsList[$i]->{DN::resFOODS["group"]} = $groupInfo;
         }
-        return CusStFunc::arrayKeysToCamel(json_decode(json_encode($foodsList),true));
+
+        return $foodsList;
+    }
+
+
+    static public function getFoodList():array{
+        $foodsList = DB::connection("resConn")
+            ->table(DN::resTables["resFOODS"])
+            ->where(DN::resFOODS["status"], "!=","deleted")
+            ->get();
+
+        return CusStFunc::arrayKeysToCamel(json_decode(json_encode(self::addFoodGroupInfo($foodsList)),true));
     }
 }
