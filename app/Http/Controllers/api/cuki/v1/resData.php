@@ -63,7 +63,7 @@ class resData extends Controller
 
         return response(array('data'=>array(
             'foods'=>$foodsUpdatedAtList,
-            'restaurantInfo'=>self::getResInfo()["updatedAt"]
+            'restaurantInfo'=>self::getResInfo($request->input("resEnglishName"))["updatedAt"]
         ),'statusCode'=>200));
     }
 
@@ -77,7 +77,7 @@ class resData extends Controller
 
         return response(array('data'=>array(
                 'foods'=>self::getFoodList(),
-                'restaurantInfo'=>self::getResInfo()
+                'restaurantInfo'=>self::getResInfo($request->input("resEnglishName"))
             ),'statusCode'=>200));
     }
     public function getResFoods(Request $request){
@@ -99,7 +99,7 @@ class resData extends Controller
         if($validator->fails())
             return response(["massage"=>$validator->errors()->all(), "statusCode"=>400],"400");
 
-        return response(array('data'=>self::getResInfo(),'statusCode'=>200));
+        return response(array('data'=>self::getResInfo($request->input("resEnglishName")),'statusCode'=>200));
     }
 
     public function getResParts(Request $request){
@@ -110,7 +110,7 @@ class resData extends Controller
         if($validator->fails())
             return response(["massage"=>$validator->errors()->all(), "statusCode"=>400],"400");
 
-        return response(['statusCode'=>200,"data"=>json_decode(self::getResInfo()[DN::resINFO["type"]])]);
+        return response(['statusCode'=>200,"data"=>json_decode(self::getResInfo($request->input("resEnglishName"))[DN::resINFO["type"]])]);
     }
 
     public function getResENameByCode(Request $request){
@@ -142,8 +142,13 @@ class resData extends Controller
 
 
 
-    static public function getResInfo():array{
+    static public function getResInfo($resEnglishName):array{
         $resInfo = DB::connection("resConn")->table(DN::resTables["resINFO"])->get()->last();
+        $resPermissions = DB::table(DN::tables["RESTAURANTS"])
+            ->where(DN::RESTAURANTS["eName"], $resEnglishName)
+            ->value(DN::RESTAURANTS["permissions"]);
+
+        $resInfo->permissions = $resPermissions;
         unset($resInfo->{DN::resINFO["counterPhone"]});
         return CusStFunc::arrayKeysToCamel(json_decode(json_encode($resInfo),true));
     }
