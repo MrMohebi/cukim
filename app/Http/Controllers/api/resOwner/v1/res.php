@@ -51,8 +51,8 @@ class res extends Controller
             "position"=>"admin",
             "owner_id"=>$ownerInfo->id,
             "owner_name"=>$ownerInfo->name,
-            DN::CA => \Carbon\Carbon::now()->timestamp,
-            DN::UA=> \Carbon\Carbon::now()->timestamp,
+            DN::CA => time(),
+            DN::UA=> time(),
         );
         if(!DB::table("restaurants")->insert($insertNewResParams)){
             return response(["massage"=>"something went wrong during create restaurant","statusCode"=>500],500);
@@ -68,7 +68,12 @@ class res extends Controller
 
 
         // add res code
-        DB::table("restaurants")->where('db_name',$dbName)->update(['res_code'=>DB::table("restaurants")->get()->last()->id + 10]);
+        DB::table("restaurants")
+            ->where('db_name',$dbName)
+            ->update([
+                DN::RESTAURANTS["code"]=>DB::table("restaurants")->get()->last()->id + 10,
+                DN::RESTAURANTS["permissions"]=>json_encode(["menu"])
+            ]);
 
 
         // add res info row
@@ -78,8 +83,8 @@ class res extends Controller
                     'english_name'=> $request->input("englishName"),
                     "persian_name"=>$request->input("persianName"),
                     "open_time"=>'[[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]]',
-                    DN::CA => \Carbon\Carbon::now()->timestamp,
-                    DN::UA=> \Carbon\Carbon::now()->timestamp,
+                    DN::CA => time(),
+                    DN::UA=> time(),
                 ]);
 
 
