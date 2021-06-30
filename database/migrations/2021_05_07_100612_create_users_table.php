@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->bigInteger('amount')->default(0);
             $table->json('off_codes')->nullable();
             $table->string('token')->nullable();
-            $table->string('info')->nullable();
+            $table->text('info')->nullable();
             $table->string('type')->nullable();
             $table->json('favorite_places')->nullable();
             $table->mediumInteger('verification_code')->nullable();
