@@ -10,13 +10,14 @@ class getIpInfo extends Controller
     public function getIpInfo(){
         $ip = $_SERVER['REMOTE_ADDR'];
 
-        $result = Http::withHeaders(["Accept"=>'application/json', "Content-Type"=>'application/json'])->get("https://ipinfo.io/$ip/json");
+//        $result = Http::get("https://ipinfo.io/$ip/json");
+        $result = Http::withHeaders(["Accept"=>'application/json', "Content-Type"=>'application/json'])->get("http://ip-api.com/json/$ip");
 
-        response(array(
-            'ip'=>$result['ip'],
+        return response(array(
+            'ip'=>$ip,
             'city'=>$result['city'],
             'country'=>$result['country'],
-            'location'=>$result['loc'],
+            'location'=>$result['regionName'],
             'timezone'=>$result['timezone']
         ));
     }
