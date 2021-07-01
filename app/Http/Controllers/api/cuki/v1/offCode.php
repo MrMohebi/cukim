@@ -23,12 +23,14 @@ class offCode extends Controller{
         $offCodesList = json_decode(json_encode(DB::table(DN::tables["OFF_CODES"])
             ->where([
                 [DN::OFF_CODES["target"], "=" , $user->value(DN::USERS["phone"])],
-                [DN::OFF_CODES["status"], "=" , "active"],
-                [DN::OFF_CODES["place"], "=" , $request->input("resEnglishName")]
+                [DN::OFF_CODES["status"], "=" , "active"]
                 ])
             ->where(function ($query) use ($request) {
                 $query->where(DN::OFF_CODES["creator"], $request->input("resEnglishName"))
                     ->orWhere(DN::OFF_CODES["creator"], 'system');
+            })->where(function ($query) use ($request) {
+                $query->where(DN::OFF_CODES["place"], $request->input("resEnglishName"))
+                    ->orWhere(DN::OFF_CODES["place"], "general");
             })
             ->get()),true);
 
