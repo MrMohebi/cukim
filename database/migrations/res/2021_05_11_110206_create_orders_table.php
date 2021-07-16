@@ -17,7 +17,7 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->string("tracking_id");
             $table->string("user_phone");
-            $table->string("order_status")->default("inLine");
+            $table->string("order_status")->default("pendingToSubmit");
             $table->json("items");
             $table->integer("delivery_price")->nullable();
             $table->json("address")->nullable();
