@@ -65,6 +65,7 @@ class food extends Controller{
                 DN::resFOODS["deliveryTime"] => $delivery_time,
                 DN::resFOODS["thumbnail"] => $thumbnail,
                 DN::CA => time(),
+                DN::UA => time(),
             ])
         ) {
             return response(['statusCode' => 200]);
