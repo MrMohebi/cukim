@@ -93,6 +93,8 @@ Route::prefix("/resOwner")->group(function (){
 
 
 Route::prefix("admin")->group(function (){
+    Route::group(["middleware"=>["adminToken"]], function () {
+    });
     Route::post('login',[login::class,'login']);
 });
 

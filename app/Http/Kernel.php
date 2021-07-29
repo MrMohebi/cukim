@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\tokenCheck\adminTokenCheck;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -55,6 +56,9 @@ class Kernel extends HttpKernel
 
         "cukiToken"=>[
             \App\Http\Middleware\tokenCheck\cukiTokenCheck::class
+        ],
+        "adminToken"=>[
+            \App\Http\Middleware\tokenCheck\adminTokenCheck::class
         ],
     ];
 
