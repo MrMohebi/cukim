@@ -24,6 +24,7 @@ use App\Http\Controllers\api\res\v1\resPager;
 use App\Http\Controllers\api\pay\v1\createLink;
 use App\Http\Controllers\api\pay\v1\verifyPayment;
 use App\Http\Controllers\api\resOwner\v1\plans;
+use App\Http\Controllers\api\admin\v1\invoice;
 
 Route::prefix("/cuki")->group(function (){
     Route::group(["middleware"=>["cukiToken"]], function () {
@@ -94,6 +95,7 @@ Route::prefix("/resOwner")->group(function (){
 
 Route::prefix("admin")->group(function (){
     Route::group(["middleware"=>["adminToken"]], function () {
+        Route::post('createInvoice',[invoice::class,'createInvoice']);
     });
     Route::post('login',[login::class,'login']);
 });
