@@ -18,6 +18,29 @@ class DN
         "PLANS"=>"plans",
         "OFF_CODES"=>"off_codes",
         "ADMINS"=>"admins",
+        "INVOICES"=>"invoices"
+    ];
+
+    const INVOICES = [
+        "resEName"=>"res_english_name",
+        "paymentKey"=>"payment_key",
+        "details"=>"details",
+        "onlineTillNow"=>"online_till_now",
+        "offlineTillNow"=>"offline_till_now",
+        "onlineFromPrevious"=>"online_from_previous",
+        "offlineFromPrevious"=>'offline_from_previous',
+        "toPay"=>"to_pay",
+        "status"=>"status",
+        "paidAt"=>"paid_at",
+        "paidAmount"=>"paid_amount",
+        "resCardNumber"=>"res_card_number",
+        "ourCardNumber"=>"our_card_number",
+        "bankTrackingId"=>"bank_tracking_id",
+        "creatorSupportName"=>"creator_support_name",
+        "creatorSupportId"=>"creator_support_id",
+        "payerSupportName"=>"payer_support_name",
+        "payerSupportId"=>"payer_support_id",
+        "vCodeTries"=>"verification_code_tries",
     ];
 
     const ADMINS = [
