@@ -17,8 +17,21 @@ class DN
         "PAYMENTS"=>"payments",
         "PLANS"=>"plans",
         "OFF_CODES"=>"off_codes",
+        "ADMINS"=>"admins",
     ];
 
+    const ADMINS = [
+        "username"=>"username",
+        "password"=>"password",
+        "email"=>"email",
+        "name"=>"name",
+        "position"=>"position",
+        "phone"=>"phone",
+        "status"=>"status",
+        "token"=>"token",
+        "lastLogin"=>"last_login",
+        "promotedBy"=>"promoted_by",
+    ];
 
     const OFF_CODES =[
         "code"=>"code",
