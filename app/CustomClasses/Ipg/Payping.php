@@ -230,12 +230,13 @@ class Payping extends Ipg{
 
         $paymentId = $paymentBaseId ."-". $paymentNum;
 
-        $api_key = $resData->value(DN::RESTAURANTS["ipgToken"]);
+        $api_key = env("PAYPING_KEY");
 
 
         // for test:
         if($resData->value(DN::RESTAURANTS["eName"]) == "cuki"){
             $amount = 1000;
+            $api_key = $resData->value(DN::RESTAURANTS["ipgToken"]);
         }
 
 
