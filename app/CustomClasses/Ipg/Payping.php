@@ -421,7 +421,7 @@ class Payping extends Ipg{
         $paymentIdsArr = json_decode($order->value(DN::resORDERS["paymentIds"]),true) ?? array();
         array_push($paymentIdsArr, $payment->value(DN::PAYMENTS["paymentId"]));
 
-        $paidFoods =  $order->value(DN::resORDERS["paidFoods"]) ?? array();
+        $paidFoods =  $order->value(DN::resORDERS["paidFoods"]) ?? "[]";
         $newPaidFoodsArr = array_merge(json_decode($paidFoods,true), json_decode($payment->value(DN::PAYMENTS["item"]),true));
 
         $paidAmount = $order->value(DN::resORDERS["paidAmount"]) ?? 0;
