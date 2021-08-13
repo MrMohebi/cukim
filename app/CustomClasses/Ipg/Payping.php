@@ -329,6 +329,9 @@ class Payping extends Ipg{
 
 
         $api_key = $resData->value(DN::RESTAURANTS["ipgToken"]);
+        if(strlen($api_key) < 10){
+            $api_key = env("PAYPING_KEY");
+        }
 
         $info_params = array(
             "refId" => $refid,
