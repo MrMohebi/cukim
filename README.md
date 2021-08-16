@@ -37,6 +37,7 @@
 | [getUserInfo](#cukigetuserinfo-post) |  |
 | [getOffCodes](#cukigetoffcodes-post) |  |
 | [validateOffCode](#cukivalidateoffcode-post) |  |
+| [getResNames](#cukigetresnames-get) |  |
 
 
 > ### ```/cuki/getUserInfo``` ```POST```
@@ -410,6 +411,23 @@
 >   }
 >   ```
 
+
+
+
+
+> ### ```/cuki/getResNames``` ```GET```
+>
+> #### Required fields:
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": {
+>            "englishNames": [],
+>            "persianNames": []
+>     }
+>   }
+>   ```
 
 
 

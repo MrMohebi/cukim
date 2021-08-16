@@ -53,6 +53,7 @@ Route::prefix("/cuki")->group(function (){
     Route::post("/getFoodById",[resData::class,"getFoodById"]);
     Route::post("/getResENameByCode",[resData::class,"getResENameByCode"]);
     Route::get("/getIpInfo",[getIpInfo::class,"getIpInfo"]);
+    Route::get("/getResNames",[resData::class,"getResNames"]);
 
 });
 

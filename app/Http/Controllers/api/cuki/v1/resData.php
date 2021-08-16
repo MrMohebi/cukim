@@ -6,13 +6,21 @@ use App\DatabaseNames\DN;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\CustomFunctions\CusStFunc;
 
-class resData extends Controller
-{
+class resData extends Controller{
 
+    public function getResNames(){
+        return response(array("data"=>
+        [
+            "englishNames"=>DB::table(DN::tables["RESTAURANTS"])->pluck(DN::RESTAURANTS["eName"]),
+            "persianNames"=>DB::table(DN::tables["RESTAURANTS"])->pluck(DN::RESTAURANTS["pName"]),
+        ]
+        , "statusCode"=>200));
+    }
 
     public function getFoodById(Request $request){
         $validator = Validator::make($request->all(),[
