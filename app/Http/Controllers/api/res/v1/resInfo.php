@@ -21,7 +21,7 @@ class resInfo extends Controller
         $owner = $request->input("owner");
         $employers = json_decode(str_replace("\\","",$request->input("employers")));
         $socialLinks = json_decode(str_replace("\\","",$request->input("socialLinks")), true);
-        $openTime = json_decode(str_replace("\\","",$request->input("openTime")));
+        $openTime = (array) json_decode(str_replace("\\","",$request->input("openTime")));
         $type = json_decode(str_replace("\\","",$request->input("type")));
         $minOrderPrice = $request->input("minOrderPrice");
 
@@ -55,7 +55,7 @@ class resInfo extends Controller
         }
 
         if($resInfo->update($sqlUpdateResInfoParams)){
-            return response(array('statusCode'=>200, "data"=>["changedFields"=>join(" ,",$changedFields)]));
+            return response(array('statusCode'=>200, "data"=>["changedFields"=>join(" ,",$changedFields)], "test"=>$openTime));
         }else{
             return response(["massage"=>"something went wrong during change food info on server", "statusCode"=>500],500);
         }
