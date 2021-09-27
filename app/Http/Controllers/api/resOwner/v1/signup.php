@@ -90,7 +90,7 @@ class signup extends Controller
         $paymentData = Payping::createOurPaymentLink("plan", [$request->input("planId")], $token, $trackingId);
         if(isset($paymentData["statusCode"]) && $paymentData["statusCode"] == 200){
             $smsApi = new GhasedakApi(env('GHASEDAKAPI_KEY'));
-            $smsApi->Verify($request->input("username"),1,'newResOwnerBuyPlan', $request->input("username"), $trackingId);
+            $smsApi->Verify($request->input("username"),1,'newResOwnerBuyPlan', $request->input("resEnglishName"), $trackingId);
             return response([
                 "data"=>[
                     "url"=>$paymentData["data"]["url"],
