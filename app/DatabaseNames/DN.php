@@ -18,7 +18,14 @@ class DN
         "PLANS"=>"plans",
         "OFF_CODES"=>"off_codes",
         "ADMINS"=>"admins",
-        "INVOICES"=>"invoices"
+        "INVOICES"=>"invoices",
+        "TEMP_RES_NAMES"=>"temp_res_names",
+    ];
+
+    const TEMP_RES_NAMES = [
+        "resOwnerId"=>"res_owner_id",
+        "pName"=>"persianName",
+        "eName"=>"englishName"
     ];
 
     const INVOICES = [

@@ -4,6 +4,8 @@
 namespace App\CustomClasses\Ipg;
 use App\CustomClasses\AbstractClasses\Ipg;
 use App\DatabaseNames\DN;
+use App\Http\Controllers\api\resOwner\v1\res;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
@@ -143,6 +145,22 @@ class Payping extends Ipg{
                 if($payment->value(DN::PAYMENTS["itemType"]) == "plan"){
                     $resOwner = DB::table(DN::tables["RES_OWNERS"])->where(DN::RES_OWNERS["phone"], $payment->value(DN::PAYMENTS["payerPhone"]));
                     $newPlanesList = json_decode($resOwner->value(DN::RES_OWNERS["plans"])) ?? [];
+                    // create restaurant
+                    if(count($newPlanesList) == 0){
+                        $tempResName = DB::table(DN::tables["TEMP_RES_NAMES"])->where(DN::TEMP_RES_NAMES["resOwnerId"], $resOwner->value("id"))->latest();
+                        $newResRequest = new Request();
+                        $newResRequest->setMethod("POST");
+                        $newResRequest->request->add([
+                            "token"=>$resOwner->value("token"),
+                            "username"=>$tempResName->value(DN::TEMP_RES_NAMES["eName"]),
+                            "password"=>$clientrefid,
+                            "persianName"=>$tempResName->value(DN::TEMP_RES_NAMES["pName"]),
+                            "englishName"=>$tempResName->value(DN::TEMP_RES_NAMES["eName"]),
+                        ]);
+                        app(res::class)->createNewRes($newResRequest);
+                    }
+
+
                     $newPlanesList[] = json_decode($payment->value(DN::PAYMENTS["item"]));
                     $resOwner->update([DN::RES_OWNERS["plans"]=>json_encode($newPlanesList)]);
                     DB::table(DN::tables["PLANS"])->where(DN::PLANS["eName"], json_decode($payment->value(DN::PAYMENTS["item"]), true)["englishName"])->increment(DN::PLANS["buyTimes"]);

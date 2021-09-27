@@ -821,6 +821,8 @@
 >   - **username** [__phone number__]
 >   - **planId**
 >   - **name**
+>   - **resPersianName**
+>   - **resEnglishName**
 >
 >   #### Return Values ``JSON``:
 >   ```json

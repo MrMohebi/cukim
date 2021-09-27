@@ -49,7 +49,9 @@ class signup extends Controller
         $validator = Validator::make($request->all(),[
             "username"=>"required|min:3",
             "planId"=>"required",
-            "name"=>"required|min:3"
+            "name"=>"required|min:3",
+            "resPersianName"=>"required",
+            "resEnglishName"=>"required",
         ]);
 
         if($validator->fails())
@@ -57,9 +59,10 @@ class signup extends Controller
 
         // check duplication
         if(
+        DB::table("restaurants")->where("english_name",$request->input("resEnglishName"))->exists() ||
         DB::table("res_owners")->where("username",$request->input("username"))->exists()
         ){
-            return response(["massage"=>'username is duplicated', "statusCode"=>400],"400");
+            return response(["massage"=>'username or resEnglishName is duplicated', "statusCode"=>400],"400");
         }
 
         $trackingId = rand(11111111,99999999);
@@ -76,6 +79,13 @@ class signup extends Controller
         ];
 
         $userId = DB::table("res_owners")->insertGetId($insertNewOwner);
+
+        DB::table(DN::tables["TEMP_RES_NAMES"])
+            ->insert([
+                DN::TEMP_RES_NAMES["resOwnerId"]=>$userId,
+                DN::TEMP_RES_NAMES["pName"]=>$request->input("resPersianName"),
+                DN::TEMP_RES_NAMES["eName"]=>$request->input("resEnglishName"),
+            ]);
 
         $paymentData = Payping::createOurPaymentLink("plan", [$request->input("planId")], $token, $trackingId);
         if(isset($paymentData["statusCode"]) && $paymentData["statusCode"] == 200){
