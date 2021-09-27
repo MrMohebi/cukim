@@ -39,7 +39,8 @@ class Payping extends Ipg{
                 "persianName"=>$plan->value(DN::PLANS["pName"]),
                 "englishName"=>$plan->value(DN::PLANS["eName"]),
                 "price"=>$plan->value(DN::PLANS["price"]),
-                "items"=> json_decode($plan->value(DN::PLANS["items"]))
+                "items"=> json_decode($plan->value(DN::PLANS["items"])),
+                "planId"=>$items[0]
             ];
             $planPrice = $plan->value(DN::PLANS["price"]);
             $amount = ($planPrice - ($plan->value(DN::PLANS["disPercentage"])/100 * $planPrice)) - $plan->value(DN::PLANS["disAmount"]);
@@ -156,8 +157,10 @@ class Payping extends Ipg{
                             "password"=>$clientrefid,
                             "persianName"=>$tempResName->value(DN::TEMP_RES_NAMES["pName"]),
                             "englishName"=>$tempResName->value(DN::TEMP_RES_NAMES["eName"]),
+                            "planId"=>json_decode($payment->value(DN::PAYMENTS["item"]),true)["planId"]
                         ]);
                         app(res::class)->createNewRes($newResRequest);
+                        $tempResName->delete();
                     }
 
 

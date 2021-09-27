@@ -866,6 +866,7 @@
 >   - **password**
 >   - **persianName**
 >   - **englishName**
+>   - **planId**
 >
 >   #### Return Values ``JSON``:
 >   ```json

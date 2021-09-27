@@ -20,6 +20,7 @@ class res extends Controller
             'password'=>"required|min:8",
             'persianName'=>"required",
             'englishName'=>"required",
+            "planId"=>"required"
         ]);
 
         if($validator->fails())
@@ -39,6 +40,10 @@ class res extends Controller
         $hashed_password = password_hash($request->input("password"), PASSWORD_DEFAULT);
         $dbName = 'cuki_'.$request->input("englishName") . "_res";
         $paymentKey = self::generatePaymentKey($request->input("englishName"));
+
+        $plan = DB::table(DN::tables["PLANS"])->find($request->input("planId"));
+        $permissions = array_map(function($eItem){return $eItem["englishName"];},json_decode($plan->items,true));
+
 
         $insertNewResParams = array(
             "username"=>$request->input("username"),
@@ -72,7 +77,7 @@ class res extends Controller
             ->where('db_name',$dbName)
             ->update([
                 DN::RESTAURANTS["code"]=>DB::table("restaurants")->get()->last()->id + 10,
-                DN::RESTAURANTS["permissions"]=>json_encode(["menu"])
+                DN::RESTAURANTS["permissions"]=>json_encode($permissions)
             ]);
 
 
