@@ -26,10 +26,6 @@ class order extends Controller
         if($validator->fails())
             return response(["massage"=>$validator->errors()->all(), "statusCode"=>400],400);
 
-        if(!(self::isResOpen() && self::isResActive()))
-            return response(["massage"=>"restaurant is closed", "statusCode"=>403],403);
-
-
         $randomNum = rand(11111111,99999999);
 
         $englishName =  $request->input("resEnglishName");
@@ -41,6 +37,11 @@ class order extends Controller
         $address =  json_decode(str_replace("\\","",$request->input("address")),true);
         $table  =  $request->input("table");
         $offCode  =  $request->input("offCode");
+
+
+        if(!(self::isResActive() && (self::willResBeOpen($deliveryAt) || self::isResOpen())))
+            return response(["massage"=>"restaurant is closed", "statusCode"=>403],403);
+
 
         $user = DB::table(DN::tables["USERS"])->where(DN::USERS["token"], $token);
 
@@ -297,6 +298,14 @@ class order extends Controller
         date_default_timezone_set("Asia/Tehran");
         $currentHour = date("H");
         $dayOfWeek = date("w");
+        $openTimes = json_decode(DB::connection("resConn")->table(DN::resTables["resINFO"])->latest()->first()->{DN::resINFO["openTime"]});
+        return in_array($currentHour, $openTimes[$dayOfWeek]);
+    }
+
+    private static function willResBeOpen(int $deliverAt):bool{
+        date_default_timezone_set("Asia/Tehran");
+        $currentHour = date("H",$deliverAt);
+        $dayOfWeek = date("w",$deliverAt);
         $openTimes = json_decode(DB::connection("resConn")->table(DN::resTables["resINFO"])->latest()->first()->{DN::resINFO["openTime"]});
         return in_array($currentHour, $openTimes[$dayOfWeek]);
     }
