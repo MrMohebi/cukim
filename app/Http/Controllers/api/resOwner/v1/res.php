@@ -27,10 +27,16 @@ class res extends Controller
             return response(["massage"=>$validator->errors()->all(), "statusCode"=>400],"400");
 
 
+        $resEName = str_replace('/\s+/', "_", $request->input("englishName"));
+
+        // check english name is correct
+        if(preg_match('/[^A-Za-z0-9_]/', $resEName))
+            return response(["massage"=>"english name should be english letter or number", "statusCode"=>400],"400");
+
         // check duplication
         if(
             DB::table("restaurants")->where("username",$request->input("username"))->exists() ||
-            DB::table("restaurants")->where("english_name",$request->input("englishName"))->exists()
+            DB::table("restaurants")->where("english_name",$resEName)->exists()
         ){
             return response(["massage"=>'username or englishName are duplicated', "statusCode"=>400],"400");
         }
@@ -38,8 +44,8 @@ class res extends Controller
         $ownerInfo = DB::table("res_owners")->where("token",$request->input("token"))->first();
 
         $hashed_password = password_hash($request->input("password"), PASSWORD_DEFAULT);
-        $dbName = 'cuki_'.$request->input("englishName") . "_res";
-        $paymentKey = self::generatePaymentKey($request->input("englishName"));
+        $dbName = 'cuki_'.$resEName . "_res";
+        $paymentKey = self::generatePaymentKey($resEName);
 
         $plan = DB::table(DN::tables["PLANS"])->find($request->input("planId"));
         $permissions = array_map(function($eItem){return $eItem["englishName"];},json_decode($plan->items,true));
@@ -49,7 +55,7 @@ class res extends Controller
             "username"=>$request->input("username"),
             "password"=>$hashed_password,
             "persian_name"=>$request->input("persianName"),
-            "english_name"=>$request->input("englishName"),
+            "english_name"=>$resEName,
             "db_name"=>$dbName,
             'token'=>CusStFunc::randomStringLower(64),
             "payment_key"=>$paymentKey,
