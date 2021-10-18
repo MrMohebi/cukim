@@ -18,7 +18,9 @@ class signin extends Controller
         if($validator->fails())
             return response(["massage"=>$validator->errors()->all(), "statusCode"=>400],"400");
 
-        $resOwnerInfo = DB::table("res_owners")->where("username",$request->input("username"))->first();
+        if(!$resOwnerInfo = DB::table("res_owners")->where("username",$request->input("username"))->orWhere("phone",$request->input("username"))->first())
+            return response(["massage"=>"username or password are incorrect", "statusCode"=>401],"401");
+
 
 
 
