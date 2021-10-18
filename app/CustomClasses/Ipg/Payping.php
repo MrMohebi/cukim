@@ -5,6 +5,7 @@ namespace App\CustomClasses\Ipg;
 use App\CustomClasses\AbstractClasses\Ipg;
 use App\DatabaseNames\DN;
 use App\Http\Controllers\api\resOwner\v1\res;
+use Ghasedak\GhasedakApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
@@ -161,6 +162,8 @@ class Payping extends Ipg{
                         ]);
                         app(res::class)->createNewRes($newResRequest);
                         $tempResName->delete();
+                        $smsApi = new GhasedakApi(env('GHASEDAKAPI_KEY'));
+                        $smsApi->Verify($resOwner->value(DN::RES_OWNERS["phone"]),1,'newResOwnerBuyPlan', $tempResName->value(DN::TEMP_RES_NAMES["eName"]), $clientrefid);
                     }
 
 

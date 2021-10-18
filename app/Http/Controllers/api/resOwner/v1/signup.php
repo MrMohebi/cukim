@@ -5,7 +5,7 @@ namespace App\Http\Controllers\api\resOwner\v1;
 use App\CustomFunctions\CusStFunc;
 use App\DatabaseNames\DN;
 use App\Http\Controllers\Controller;
-use Ghasedak\GhasedakApi;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -59,11 +59,19 @@ class signup extends Controller
 
         // check duplication
         if(
-        DB::table("restaurants")->where("english_name",$request->input("resEnglishName"))->exists() ||
-        DB::table("res_owners")->where("username",$request->input("username"))->exists()
+        DB::table("restaurants")->where("english_name",$request->input("resEnglishName"))->exists()
         ){
             return response(["massage"=>'username or resEnglishName is duplicated', "statusCode"=>400],"400");
         }
+
+        // if user exist and doesn't have active res delete it
+        if($tUser = DB::table("res_owners")->where("username",$request->input("username"))){
+            if(!DB::table(DN::tables["RESTAURANTS"])->where(DN::RESTAURANTS["ownerId"], $tUser->value("id"))->exists()){
+                DB::table(DN::tables["TEMP_RES_NAMES"])->where(DN::TEMP_RES_NAMES["resOwnerId"], $tUser->value("id"))->delete();
+                $tUser->delete();
+            }
+        }
+
 
         $trackingId = rand(11111111,99999999);
 
@@ -89,9 +97,7 @@ class signup extends Controller
 
         $paymentData = Payping::createOurPaymentLink("plan", [$request->input("planId")], $token, $trackingId);
         if(isset($paymentData["statusCode"]) && $paymentData["statusCode"] == 200){
-            $smsApi = new GhasedakApi(env('GHASEDAKAPI_KEY'));
-            $smsApi->Verify($request->input("phone"),1,'newResOwnerBuyPlan', $request->input("resEnglishName"), $trackingId);
-            return response([
+             return response([
                 "data"=>[
                     "url"=>$paymentData["data"]["url"],
                     "amount"=>$paymentData["data"]["amount"],
