@@ -441,6 +441,7 @@
 | [createFood](#rescreatefood-post) | |
 | [changeFoodInfo](#reschangefoodinfo-post) |  |
 | [uploadFoodImage](#resuploadfoodimage-post) |  |
+| [deleteFoodImage](#resdeletefoodimage-post) |  |
 | [createFood](#rescreatefood-post) |  |
 | [changeOrderStatus](#reschangeorderstatus-post) |  |
 | [changeResInfo](#reschangeresinfo-post) |  |
@@ -567,6 +568,26 @@
 >     }
 >   }
 >   `
+
+
+
+> ### ```/res/deleteFoodImage``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>   - **foodId**
+>   - **foodImagePath** 
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": {
+>         "removedPhoto": [] 
+>     }
+>   }
+>   `
+
 
 
 

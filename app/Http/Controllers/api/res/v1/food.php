@@ -211,7 +211,46 @@ class food extends Controller{
         }
     }
 
-    public function getFoodList (){
+    public function deleteFoodImage(Request $request){
+        $validator = Validator::make($request->all(), [
+            "foodId" => "required",
+            'foodImagePath' => 'required'
+        ]);
+
+        if ($validator->fails())
+            return response(array('message' => $validator->errors()->all(), 'statusCode' => 400), 400);
+
+
+        $foodId = $request->input("foodId");
+        $foodImagePath = $request->input('foodImagePath');
+
+        $photoObj =[];
+        $previousImageList = json_decode(DB::connection("resConn")->table(DN::resTables["resFOODS"])->where("id",$foodId)->value(DN::resFOODS["photos"]) ?? "[]", true);
+        foreach ($previousImageList as $keyList=>$ePhoto){
+            foreach ($ePhoto as $eQuality){
+                if($eQuality == $foodImagePath){
+                    $photoObj = $ePhoto;
+                    unset($previousImageList[$keyList]);
+                }
+            }
+        }
+
+        if($photoObj == [])
+            return response(["massage"=>"image not found", "statusCode"=>404],200);
+
+        if(DB::connection("resConn")->table(DN::resTables["resFOODS"])->where("id",$foodId)
+            ->update([
+                DN::resFOODS["photos"]=>array_values($previousImageList)
+            ])
+        ){
+            return response(array('statusCode'=>200, "data"=>["removedPhoto"=>$photoObj]));
+        }else{
+            return response(["massage"=>"something went wrong during deleting image on server", "statusCode"=>500],500);
+        }
+    }
+
+
+        public function getFoodList (){
         $foodsList = DB::connection("resConn")->table(DN::resTables["resFOODS"]);
         return response(array('statusCode'=>200, 'data'=>$foodsList ? CusStFunc::arrayKeysToCamel(json_decode(json_encode($foodsList->get()),true)) : array()));
 

@@ -65,6 +65,7 @@ Route::prefix("/res")->group(function (){
         Route::post('createFood',[food::class,'createNewFood']);
         Route::post('changeFoodInfo',[food::class,'changeFoodInfo']);
         Route::post('uploadFoodImage',[food::class,'uploadFoodImage']);
+        Route::post('deleteFoodImage',[food::class,'deleteFoodImage']);
         Route::post('changeOrderStatus',[resOrder::class,'changeOrderStatus']);
         Route::post('changeResInfo',[resInfo::class,'changeResInfo']);
         Route::post('changePassword',[resLogin::class,'changePassword']);
