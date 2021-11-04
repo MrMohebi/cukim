@@ -440,6 +440,7 @@
 | [createCategory](#rescreatecategory-post) | |
 | [createFood](#rescreatefood-post) | |
 | [changeFoodInfo](#reschangefoodinfo-post) |  |
+| [uploadFoodImage](#resuploadfoodimage-post) |  |
 | [createFood](#rescreatefood-post) |  |
 | [changeOrderStatus](#reschangeorderstatus-post) |  |
 | [changeResInfo](#reschangeresinfo-post) |  |
@@ -547,6 +548,25 @@
 >     }
 >   }
 >   ``` 
+
+
+
+> ### ```/res/uploadFoodImage``` ```POST```
+>
+> #### Required fields:
+>   - **token**
+>   - **foodId**
+>   - **foodImage** [img file]
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": {
+>         "photoList": [] 
+>     }
+>   }
+>   `
 
 
 

@@ -152,6 +152,65 @@ class food extends Controller{
         }
     }
 
+    public function uploadFoodImage(Request $request){
+        $validator = Validator::make($request->all(), [
+            "foodId" => "required",
+            'foodImage' => 'image|mimes:jpg,jpeg,png,svg|required'
+        ]);
+
+        if ($validator->fails())
+            return response(array('message' => $validator->errors()->all(), 'statusCode' => 400), 400);
+
+
+        $foodId = $request->input("foodId");
+        $token = $request->input("token");
+        $imgFile = $request->file('foodImage');
+
+        $resEnglishName = DB::table(DN::tables["RESTAURANTS"])->where(DN::RESTAURANTS["token"], $token)->value(DN::RESTAURANTS["eName"]);
+        $restaurantFolder = preg_replace('/ /', "_", $resEnglishName);
+        $filePath = self::resIMGPath.$restaurantFolder."/foodsImg";
+
+        self::createPath($filePath);
+
+        $img = Image::make($imgFile->path());
+
+        // check image is landscape and  4:3
+        if(($img->width() / $img->height()) !== (4/3)){
+            if(($img->width() / $img->height()) === (3/4)){
+                return response(["massage"=>"image must be landscape", "statusCode"=>400]);
+            }else{
+                return response(["massage"=>"image aspect ratio must be 4:3", "statusCode"=>400]);
+            }
+        }
+
+        if($img->width() < 1080){
+            return response(["massage"=>"please select a bigger picture, min width is 1080", "statusCode"=>400]);
+        }
+
+
+        $imageInfo = [];
+        $qualityList = [1080,720,540];
+        $currentTime = time();
+        foreach ($qualityList as $eQuality){
+            $newFileName = strtolower($foodId."_$currentTime"."_foodImg_$eQuality".".". $imgFile->extension());
+            $img->resize($eQuality, null, function ($const) {$const->aspectRatio();})->save($filePath.'/'.$newFileName);
+            $imgUrlPath = "resimg/".$restaurantFolder."/foodsImg/".$newFileName;
+            $imageInfo[$eQuality] = $imgUrlPath;
+        }
+
+        $previousImageList = json_decode(DB::connection("resConn")->table(DN::resTables["resFOODS"])->where("id",$foodId)->value(DN::resFOODS["photos"]) ?? "[]");
+        $previousImageList[] = $imageInfo;
+        if(DB::connection("resConn")->table(DN::resTables["resFOODS"])->where("id",$foodId)
+            ->update([
+                DN::resFOODS["photos"]=>$previousImageList
+            ])
+        ){
+            return response(array('statusCode'=>200, "data"=>["photoList"=>$previousImageList]));
+        }else{
+            return response(["massage"=>"something went wrong during uploading image on server", "statusCode"=>500],500);
+        }
+    }
+
     public function getFoodList (){
         $foodsList = DB::connection("resConn")->table(DN::resTables["resFOODS"]);
         return response(array('statusCode'=>200, 'data'=>$foodsList ? CusStFunc::arrayKeysToCamel(json_decode(json_encode($foodsList->get()),true)) : array()));
