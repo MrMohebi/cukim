@@ -11,6 +11,7 @@ class DN
 
     const tables = [
         "RES_OWNERS"=>"res_owners",
+        "THEMES"=>"themes",
         "FOOD_GROUPS"=>"food_groups",
         "RESTAURANTS"=>"restaurants",
         "USERS"=>"users",
@@ -26,6 +27,10 @@ class DN
         "resOwnerId"=>"res_owner_id",
         "pName"=>"persianName",
         "eName"=>"englishName"
+    ];
+
+    const THEMES = [
+        "name"=>"name",
     ];
 
     const INVOICES = [
@@ -198,6 +203,7 @@ class DN
         "eName"=>"english_name",
         "counterPhone"=>'counter_phone',
         "type"=>"type",
+        "theme"=>"theme",
         "status"=>"status",
         "phones"=>"phones",
         "address"=>"address",
