@@ -23,6 +23,7 @@ class CreateInfoTable extends Migration
             $table->string("address")->nullable();
             $table->string("address_link")->nullable();
             $table->string("owner")->nullable();
+            $table->string("theme")->default("default");
             $table->json("employers")->nullable();
             $table->json("social_links")->nullable();
             $table->json("open_time")->nullable();
