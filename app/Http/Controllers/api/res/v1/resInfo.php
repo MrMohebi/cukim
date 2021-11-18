@@ -14,6 +14,7 @@ class resInfo extends Controller
         $persianName = trim($request->input("persianName"));
         $englishName = trim($request->input("englishName"));
         $status = $request->input("status");
+        $theme = $request->input("theme");
         $counterPhone = $request->input("counterPhone");
         $phone = json_decode(str_replace("\\","",$request->input("phone")));
         $addressText = $request->input("addressText");
@@ -42,6 +43,7 @@ class resInfo extends Controller
             DN::resINFO["employers"] => is_array($employers) && count($employers) > 0 ? json_encode($employers) : $resInfo->value(DN::resINFO["employers"]),
             DN::resINFO["socialLinks"] => is_array($socialLinks) && count($socialLinks) > 0  ? json_encode($socialLinks) : $resInfo->value(DN::resINFO["socialLinks"]),
             DN::resINFO["openTime"] => is_array($openTime) && count($openTime) == 7  ? json_encode($openTime) : $resInfo->value(DN::resINFO["openTime"]),
+            DN::resINFO["theme"] => strlen($theme) > 2 ? $theme : $resInfo->value(DN::resINFO["theme"]),
             DN::resINFO["type"] => is_array($type) && count($type) > 0  ? json_encode($type) : $resInfo->value(DN::resINFO["type"]),
             DN::resINFO["minOrderPrice"]=> $minOrderPrice > 100  ? $minOrderPrice : $resInfo->value(DN::resINFO["minOrderPrice"]),
             DN::UA => time(),
