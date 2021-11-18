@@ -451,6 +451,7 @@
 | [getOrderList](#resgetorderlist-post) |  |
 | [getPagerList](#resgetpagerlist-post) |  |
 | [getResInfo](#resgetresinfo-post) |  |
+| [getThemes](#resgetthemes-post) |  |
 
 
 
@@ -724,6 +725,19 @@
 >
 > #### Required fields:
 >   - **token**
+>
+>   #### Return Values ``JSON``:
+>   ```json
+>   {
+>     "statusCode": "[code]",
+>     "data": {}
+>   }
+>   ```
+
+
+> ### ```/res/getThemes``` ```POST```
+>
+> #### Required fields:
 >
 >   #### Return Values ``JSON``:
 >   ```json

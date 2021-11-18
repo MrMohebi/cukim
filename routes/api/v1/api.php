@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\res\v1\theme;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\resOwner\v1\res;
 use App\Http\Controllers\api\resOwner\v1\signup;
@@ -77,6 +78,7 @@ Route::prefix("/res")->group(function (){
     });
 
     Route::post('login',[resLogin::class,'login']);
+    Route::post('getThemes',[theme::class,'getThemes']);
 });
 
 
