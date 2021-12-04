@@ -539,6 +539,8 @@
 >   - discount
 >   - deliveryTime
 >   - counterAppFoodId
+>   - relatedMainPersianName
+>   - relatedPriceRange [int]
 >   - foodThumbnail  [img file]
 >
 >   #### Return Values ``JSON``:

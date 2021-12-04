@@ -93,6 +93,9 @@ class food extends Controller{
         $discount = $request->input("discount");
         $deliveryTime = $request->input("deliveryTime");
         $counterAppFoodId = $request->input("counterAppFoodId");
+        $relatedMainPersianName = $request->input("relatedMainPersianName");
+        $relatedPriceRange = json_decode($request->input("relatedPriceRange")) ?? [];
+//        $relatedThumbnail = $request->input("relatedThumbnail");
 
 
         // validate and translate inputs
@@ -129,6 +132,8 @@ class food extends Controller{
             DN::resFOODS["discount"] => $discount > 0 ? $discount : $previousFoodInfo[DN::resFOODS["discount"]],
             DN::resFOODS["counterAppFoodId"] => $counterAppFoodId > 0 ? $counterAppFoodId : $previousFoodInfo[DN::resFOODS["counterAppFoodId"]],
             DN::resFOODS["deliveryTime"] => $deliveryTime > 0 ? $deliveryTime : $previousFoodInfo[DN::resFOODS["deliveryTime"]],
+            DN::resFOODS["relatedPName"] => strlen($relatedMainPersianName) > 2 ? $relatedMainPersianName : $previousFoodInfo[DN::resFOODS["relatedPName"]],
+            DN::resFOODS["relatedPriceRange"] => count($relatedPriceRange) === 2 ? $relatedPriceRange : $previousFoodInfo[DN::resFOODS["relatedPriceRange"]],
             DN::UA=>time(),
         );
 
