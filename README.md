@@ -515,6 +515,8 @@
 >   - price
 >   - status
 >   - deliveryTime
+>   - relatedMainPersianName
+>   - relatedPriceRange [[int]]
 >
 >   #### Return Values ``JSON``:
 >   ```json
@@ -540,7 +542,7 @@
 >   - deliveryTime
 >   - counterAppFoodId
 >   - relatedMainPersianName
->   - relatedPriceRange [int]
+>   - relatedPriceRange [[int]]
 >   - foodThumbnail  [img file]
 >
 >   #### Return Values ``JSON``:

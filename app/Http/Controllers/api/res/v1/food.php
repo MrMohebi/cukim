@@ -36,6 +36,8 @@ class food extends Controller{
         $status = $request->input('status') ?? 'outOfStock';
         $delivery_time = $request->input('deliveryTime') ?? 0;
         $thumbnail = $request->input('thumbnail') ?? "https://dl.cuki.ir/sampleAssets/sampleThumbnail_96x96.png";
+        $relatedMainPersianName = trim($request->input("relatedMainPersianName")??"");
+        $relatedPriceRange = json_decode($request->input("relatedPriceRange")) ?? [];
 
 
         $details_array = array_values(array_filter(array_map('trim', explode("+", str_replace(array("\n", "\r"), '', $details)))));
@@ -64,6 +66,8 @@ class food extends Controller{
                 DN::resFOODS["discount"] => 0,
                 DN::resFOODS["deliveryTime"] => $delivery_time,
                 DN::resFOODS["thumbnail"] => $thumbnail,
+                DN::resFOODS["relatedPName"] => $relatedMainPersianName,
+                DN::resFOODS["relatedPriceRange"] => $relatedPriceRange,
                 DN::CA => time(),
                 DN::UA => time(),
             ])
