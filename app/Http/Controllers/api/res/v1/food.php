@@ -37,7 +37,7 @@ class food extends Controller{
         $delivery_time = $request->input('deliveryTime') ?? 0;
         $thumbnail = $request->input('thumbnail') ?? "https://dl.cuki.ir/sampleAssets/sampleThumbnail_96x96.png";
         $relatedMainPersianName = trim($request->input("relatedMainPersianName")??"");
-        $relatedPriceRange = json_decode($request->input("relatedPriceRange")) ?? [];
+        $relatedPriceRange = $request->input("relatedPriceRange") ?? '[]';
 
 
         $details_array = array_values(array_filter(array_map('trim', explode("+", str_replace(array("\n", "\r"), '', $details)))));
