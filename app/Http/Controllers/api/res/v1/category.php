@@ -29,14 +29,15 @@ class category extends Controller
         $type = $request->input('type') ?? "restaurant";
         $averageColor = $request->input('averageColor') ?? "";
 
+        $res = DB::table(DN::tables["RESTAURANTS"])->where(DN::RESTAURANTS["token"], $request->input("token"));
+
         if (
-            DB::table(DN::tables["FOOD_GROUPS"])->where(DN::FOOD_GROUPS['pName'], $catPersianName)->exists() &&
-            DB::table(DN::tables["FOOD_GROUPS"])->where(DN::FOOD_GROUPS['eName'], $catEnglishName)->exists()
+            DB::table(DN::tables["FOOD_GROUPS"])->where([[DN::FOOD_GROUPS['pName'], "=", $catPersianName], [$res->value(DN::RESTAURANTS["eName"]), '=', DN::FOOD_GROUPS['resEName']]])->exists() &&
+            DB::table(DN::tables["FOOD_GROUPS"])->where([[DN::FOOD_GROUPS['eName'], "=", $catEnglishName], [$res->value(DN::RESTAURANTS["eName"]), '=', DN::FOOD_GROUPS['resEName']]])->exists()
         ) {
             return response(["message" => "some of info are duplicate", 'statusCode' => 402], 402);
         }
 
-        $res = DB::table(DN::tables["RESTAURANTS"])->where(DN::RESTAURANTS["token"], $request->input("token"));
 
         $insertCreateCat = [
             DN::FOOD_GROUPS['pName'] => $catPersianName,

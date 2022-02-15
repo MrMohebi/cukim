@@ -81,7 +81,7 @@ class food extends Controller{
     public function changeFoodInfo(Request $request){
         $validator = Validator::make($request->all(), [
             "foodId" => "required",
-            'foodThumbnail' => 'image|mimes:jpg,jpeg,png,svg,gif|max:2048'
+            'foodThumbnail' => 'image|mimes:jpg,jpeg,png,svg,gif|max:8119'
         ]);
 
         if ($validator->fails())
@@ -275,7 +275,7 @@ class food extends Controller{
 
         $newFileName = strtolower($foodId.'_'.time().'_foodThumbnail.'. $thumbnail->extension());
         $img = Image::make($thumbnail->path());
-        $img->resize(125, 150, function ($const) {
+        $img->resize(150, null, function ($const) {
             $const->aspectRatio();
         })->save($filePath.'/'.$newFileName);
 
