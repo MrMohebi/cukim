@@ -32,8 +32,8 @@ class category extends Controller
         $res = DB::table(DN::tables["RESTAURANTS"])->where(DN::RESTAURANTS["token"], $request->input("token"));
 
         if (
-            DB::table(DN::tables["FOOD_GROUPS"])->where([[DN::FOOD_GROUPS['pName'], "=", $catPersianName], [$res->value(DN::RESTAURANTS["eName"]), '=', DN::FOOD_GROUPS['resEName']]])->exists() &&
-            DB::table(DN::tables["FOOD_GROUPS"])->where([[DN::FOOD_GROUPS['eName'], "=", $catEnglishName], [$res->value(DN::RESTAURANTS["eName"]), '=', DN::FOOD_GROUPS['resEName']]])->exists()
+            DB::table(DN::tables["FOOD_GROUPS"])->where([[DN::FOOD_GROUPS['pName'], "=", $catPersianName], [DN::FOOD_GROUPS['resEName'], '=', $res->value(DN::RESTAURANTS["eName"])]])->exists() &&
+            DB::table(DN::tables["FOOD_GROUPS"])->where([[DN::FOOD_GROUPS['eName'], "=", $catEnglishName], [DN::FOOD_GROUPS['resEName'], '=', $res->value(DN::RESTAURANTS["eName"])]])->exists()
         ) {
             return response(["message" => "some of info are duplicate", 'statusCode' => 402], 402);
         }
